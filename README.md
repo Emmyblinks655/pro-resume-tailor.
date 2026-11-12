@@ -51,6 +51,7 @@ If the selected provider has no key, or `AI_PROVIDER=mock`, requests stay in moc
 3. `/pricing`: the $9 pack of 5 tailorings. The button says Coming soon and calls the stub checkout adapter.
 4. `/signup` and `/login`: email and password. `/dashboard`: the account email, a preview credit balance, and log out.
 5. `/privacy`, `/terms`, and `/refund`: draft pages.
+6. `/jobs`: live listings from Remotive, Arbeitnow, Himalayas, and Remote OK. Cards link to the original posting. “Tailor my resume for this job” opens `/tailor` with that description filled in. `/jobs` stays public.
 
 Local preview credits (default 5) live in an httpOnly cookie named `prt_credits`. They are not a purchase. Set `LOCAL_CREDITS_START` to change the seeded amount. Clearing the cookie seeds them again.
 
@@ -64,7 +65,7 @@ Credits go through `CreditsRepository` in `src/lib/credits/types.ts`. The live i
 
 Email and password accounts use Supabase Auth through `@supabase/ssr`. Supabase hashes the password. This app stores the session in httpOnly cookies and refreshes it in `src/proxy.ts`. Next.js 16 renamed Middleware to Proxy; the session code is the same job middleware used to do. The publishable anon key is the only Supabase key the app reads. The service role key is not used.
 
-`/tailor` and `/dashboard` require a logged-in user once the Supabase variables are set. Anyone else is redirected to `/login?next=...` and sent back after login. The landing page, pricing, and the legal pages stay public. `/api/tailor` also refuses the request when accounts are on and there is no session.
+`/tailor` and `/dashboard` require a logged-in user once the Supabase variables are set. Anyone else is redirected to `/login?next=...` and sent back after login. The landing page, pricing, the legal pages, and `/jobs` stay public. `/api/jobs` stays public too. `/api/tailor` also refuses the request when accounts are on and there is no session.
 
 If `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_ANON_KEY` is missing, the build still passes. Signup, login, the tailor, and the dashboard show **Accounts aren't configured yet**. The tailor keeps working. Nothing is hard-locked.
 
