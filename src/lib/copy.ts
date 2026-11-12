@@ -30,6 +30,11 @@ export const FAQ = [
   {
     question: "Do you store my resume?",
     answer:
-      "Not in a database in this version. The text is used to produce the draft for that request. Preview credits live in a cookie on your browser. See the privacy page for the draft policy.",
+      "Not in a database in this version. The text is used to produce the draft for that request. Preview credits live in a cookie on your browser. If you connect LinkedIn, the name, email, photo, member ID, and an encrypted access token are stored until you disconnect. See the privacy page.",
+  },
+  {
+    question: "Does connecting LinkedIn import my work history?",
+    answer:
+      "No. Sign In with LinkedIn using OpenID Connect returns your name, email, profile photo, and a member ID. It does not include jobs, endorsements, or your network. Those need LinkedIn partner approval, which this app does not have.",
   },
 ] as const;
