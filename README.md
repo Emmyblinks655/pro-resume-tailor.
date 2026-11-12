@@ -50,6 +50,7 @@ If the selected provider has no key, or `AI_PROVIDER=mock`, requests stay in moc
 2. `/tailor`: paste a resume or upload PDF/DOCX, paste a job, tailor, compare before and after, download Letter or A4 PDF.
 3. `/pricing`: the $9 pack of 5 tailorings. The button says Coming soon and calls the stub checkout adapter.
 4. `/privacy`, `/terms`, and `/refund`: draft pages.
+5. `/jobs`: live listings from Remotive, Arbeitnow, Himalayas, and Remote OK. Cards link to the original posting. “Tailor my resume for this job” opens `/tailor` with that description filled in.
 
 Local preview credits (default 5) live in an httpOnly cookie named `prt_credits`. They are not a purchase. Set `LOCAL_CREDITS_START` to change the seeded amount. Clearing the cookie seeds them again.
 
