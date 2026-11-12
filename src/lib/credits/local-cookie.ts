@@ -4,6 +4,7 @@ import {
   CREDIT_NOTE,
   type CreditBalance,
   type CreditReason,
+  type CreditsRepository,
   type StoredCredits,
 } from "@/lib/credits/types";
 
@@ -58,10 +59,21 @@ function encode(stored: StoredCredits): string {
 
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
 
-function load(jar: CookieStore): StoredCredits {
+export function readStoredSubjectId(jar: CookieStore): string | null {
+  return decode(jar.get(COOKIE)?.value)?.subjectId ?? null;
+}
+
+function load(jar: CookieStore, preferredSubjectId?: string): StoredCredits {
   const existing = decode(jar.get(COOKIE)?.value);
-  if (existing) return existing;
-  const subjectId = crypto.randomUUID();
+  if (existing) {
+    if (!preferredSubjectId || existing.subjectId === preferredSubjectId) return existing;
+    return {
+      ...existing,
+      subjectId: preferredSubjectId,
+      entries: existing.entries.map((entry) => ({ ...entry, subjectId: preferredSubjectId })),
+    };
+  }
+  const subjectId = preferredSubjectId ?? crypto.randomUUID();
   const amount = startingCredits();
   return {
     subjectId,
@@ -99,26 +111,46 @@ function save(jar: CookieStore, stored: StoredCredits, delta: number, reason: Cr
   return publicBalance(next.remaining);
 }
 
-export async function getLocalCredits(): Promise<CreditBalance> {
-  const jar = await cookies();
-  const stored = load(jar);
-  if (!decode(jar.get(COOKIE)?.value)) {
+function persistIfNeeded(jar: CookieStore, stored: StoredCredits) {
+  const previous = decode(jar.get(COOKIE)?.value);
+  if (!previous || previous.subjectId !== stored.subjectId) {
     jar.set(COOKIE, encode(stored), cookieOptions());
   }
+}
+
+export async function getLocalCredits(subjectId?: string): Promise<CreditBalance> {
+  const jar = await cookies();
+  const stored = load(jar, subjectId);
+  persistIfNeeded(jar, stored);
   return publicBalance(stored.remaining);
 }
 
-export async function consumeLocalCredit(): Promise<{ ok: boolean; balance: CreditBalance }> {
+export async function consumeLocalCredit(subjectId?: string): Promise<{ ok: boolean; balance: CreditBalance }> {
   const jar = await cookies();
-  const stored = load(jar);
+  const stored = load(jar, subjectId);
   if (stored.remaining < 1) {
-    jar.set(COOKIE, encode(stored), cookieOptions());
+    persistIfNeeded(jar, stored);
     return { ok: false, balance: publicBalance(stored.remaining) };
   }
   return { ok: true, balance: save(jar, stored, -1, "tailor") };
 }
 
-export async function refundLocalCredit(): Promise<CreditBalance> {
+export async function refundLocalCredit(subjectId?: string): Promise<CreditBalance> {
   const jar = await cookies();
-  return save(jar, load(jar), 1, "refund");
+  return save(jar, load(jar, subjectId), 1, "refund");
+}
+
+export const localCookieCredits: CreditsRepository = {
+  getBalance: (subjectId) => getLocalCredits(subjectId),
+  consumeOne: (subjectId) => consumeLocalCredit(subjectId),
+  grant: (subjectId, amount, reason) => grantLocalCredits(subjectId, amount, reason),
+};
+
+export async function grantLocalCredits(
+  subjectId: string,
+  amount: number,
+  reason: CreditReason,
+): Promise<CreditBalance> {
+  const jar = await cookies();
+  return save(jar, load(jar, subjectId), amount, reason);
 }

@@ -49,7 +49,8 @@ If the selected provider has no key, or `AI_PROVIDER=mock`, requests stay in moc
 1. Landing page: tagline, three steps, the no-subscription message, and FAQ.
 2. `/tailor`: paste a resume or upload PDF/DOCX, paste a job, tailor, compare before and after, download Letter or A4 PDF.
 3. `/pricing`: the $9 pack of 5 tailorings. The button says Coming soon and calls the stub checkout adapter.
-4. `/privacy`, `/terms`, and `/refund`: draft pages.
+4. `/signup` and `/login`: email and password. `/dashboard`: the account email, a preview credit balance, and log out.
+5. `/privacy`, `/terms`, and `/refund`: draft pages.
 
 Local preview credits (default 5) live in an httpOnly cookie named `prt_credits`. They are not a purchase. Set `LOCAL_CREDITS_START` to change the seeded amount. Clearing the cookie seeds them again.
 
@@ -57,7 +58,29 @@ Local preview credits (default 5) live in an httpOnly cookie named `prt_credits`
 
 `PAYMENT_PROVIDER` is `polar` or `paystack`. Both adapters implement the same `PaymentProvider` interface and return `coming_soon`. They do not call Polar or Paystack and they do not need keys.
 
-Credits go through `CreditsRepository` in `src/lib/credits/types.ts`. The only implementation today is the cookie ledger. A later Supabase adapter can replace that body using `credit_balances` and `credit_ledger` once accounts exist. The commented Supabase variables in `.env.example` are not read.
+Credits go through `CreditsRepository` in `src/lib/credits/types.ts`. The live implementation is still the cookie ledger. When someone is logged in, the ledger subject id is their Supabase auth user id. Checkout is still a stub. `credit_balances` and `credit_ledger` are not created.
+
+## Accounts
+
+Email and password accounts use Supabase Auth through `@supabase/ssr`. Supabase hashes the password. This app stores the session in httpOnly cookies and refreshes it in `src/proxy.ts`. Next.js 16 renamed Middleware to Proxy; the session code is the same job middleware used to do. The publishable anon key is the only Supabase key the app reads. The service role key is not used.
+
+`/tailor` and `/dashboard` require a logged-in user once the Supabase variables are set. Anyone else is redirected to `/login?next=...` and sent back after login. The landing page, pricing, and the legal pages stay public. `/api/tailor` also refuses the request when accounts are on and there is no session.
+
+If `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_ANON_KEY` is missing, the build still passes. Signup, login, the tailor, and the dashboard show **Accounts aren't configured yet**. The tailor keeps working. Nothing is hard-locked.
+
+Passwords must be at least 8 characters. The app also rejects passwords longer than 72 characters, which is the bcrypt limit.
+
+### Supabase dashboard
+
+1. In the Supabase project, open Authentication → URL configuration.
+2. Set Site URL to `https://pro-resume-tailor.vercel.app`.
+3. Add redirect URL `https://pro-resume-tailor.vercel.app/auth/callback`. That is where email confirmation returns.
+4. For local development, also allow `http://localhost:3000/auth/callback`.
+5. Authentication → Providers: enable Email. Set the minimum password length to 8 so Supabase enforces the same rule.
+6. Apply `supabase/migrations/20261113001000_profiles.sql`. It creates `public.profiles`, turns on RLS so a user can read only their own row, and adds a trigger in the private schema that inserts the profile when `auth.users` grows.
+7. Copy the project URL and the publishable anon key into the variables above. Do not put the service role key in the app.
+
+The profiles table does not store a password. Disconnecting an account is log out, which clears the session cookie.
 
 ## Scripts
 
@@ -71,7 +94,7 @@ npm run build
 ## Deploy on Vercel
 
 1. Import the Git repository. Framework preset: Next.js.
-2. Add the variables from `.env.example` in Project Settings → Environment Variables. Mark `GEMINI_API_KEY` and `ANTHROPIC_API_KEY` as sensitive. Leave them empty to stay in mock mode.
+2. Add the variables from `.env.example` in Project Settings → Environment Variables. Mark `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as sensitive. Leave the AI keys empty to stay in mock mode. Leave the Supabase keys empty to keep accounts off. In the Supabase dashboard, set Site URL to `https://pro-resume-tailor.vercel.app` and the redirect URL to `https://pro-resume-tailor.vercel.app/auth/callback`.
 3. Do not set `runtime = 'edge'`. The AI call and PDF parsing use the default Node.js runtime.
 4. Deploy. `npm run build` is the build command Vercel detects.
 
