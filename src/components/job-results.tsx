@@ -65,13 +65,13 @@ export function JobResults({ jobs }: { jobs: Job[] }) {
       </p>
 
       {ranked.length === 0 ? (
-        <p className="rounded-2xl border border-line bg-card px-4 py-3 text-sm leading-6">
+        <p className="rounded-[28px] border border-line bg-card px-4 py-4 text-sm leading-6">
           No listings matched. Try a broader keyword, or clear the location filter.
         </p>
       ) : (
         <ul className="flex flex-col gap-3">
           {ranked.map((job) => (
-            <li key={job.id} className="rounded-3xl border border-line bg-card p-4">
+            <li key={job.id} className="rounded-[28px] border border-line bg-card p-5 shadow-[0_16px_40px_rgba(28,25,21,0.04)]">
               <div className="flex flex-wrap items-center gap-2">
                 <a
                   href={JOB_SOURCES[job.source].url}
@@ -104,14 +104,14 @@ export function JobResults({ jobs }: { jobs: Job[] }) {
                   href={job.url}
                   target="_blank"
                   rel="noopener"
-                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-line bg-paper px-4 text-sm font-semibold"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-paper px-4 text-sm font-semibold"
                 >
                   View job
                 </a>
                 <button
                   type="button"
                   onClick={() => tailor(job)}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-copper px-4 text-sm font-semibold text-white"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-copper px-4 text-sm font-semibold text-white"
                 >
                   Tailor my resume for this job
                 </button>

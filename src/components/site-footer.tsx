@@ -14,7 +14,7 @@ export function SiteFooter() {
         <p>No subscription, ever. Payments are not live in this preview.</p>
         <nav className="flex flex-wrap gap-x-4 gap-y-2">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="underline-offset-4 hover:underline">
+            <Link key={link.href} href={link.href} className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">
               {link.label}
             </Link>
           ))}

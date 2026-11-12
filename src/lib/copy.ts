@@ -30,7 +30,7 @@ export const FAQ = [
   {
     question: "Do I need an account?",
     answer:
-      "When Supabase is configured, you sign up with an email and a password of at least 8 characters before tailoring. Until those keys are set, the login page says accounts are not configured yet and the tailor stays open. Passwords are hashed by Supabase. This app does not keep them.",
+      "When Supabase is configured, you sign up with an email and a password of at least 8 characters. A 6-digit code confirms the address. Until those keys are set, the login page says accounts are not configured yet and the tailor stays open. Passwords are hashed by Supabase. This app does not keep them.",
   },
   {
     question: "Do you store my resume?",

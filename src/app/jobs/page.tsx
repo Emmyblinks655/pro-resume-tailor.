@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+import { primaryButtonClass, textFieldClass } from "@/components/field-styles";
 import { JobResults } from "@/components/job-results";
 import { parseJobQuery } from "@/lib/jobs/filter";
 import { searchJobs } from "@/lib/jobs/search";
@@ -10,8 +11,6 @@ export const metadata: Metadata = {
   title: "Jobs",
   description: "Browse live job listings and open the tailor with a description already filled in.",
 };
-
-const fieldClass = "mt-1 block min-h-12 w-full rounded-2xl border border-line bg-card px-3 text-base";
 
 function JobsFallback() {
   return <p className="mx-auto max-w-5xl px-4 py-8 text-sm text-ink-soft">Loading jobs...</p>;
@@ -35,9 +34,10 @@ async function JobsContent({
 function JobsBoard({ query, result }: { query: JobQuery; result: JobSearchResponse }) {
   const failed = result.sources.filter((source) => !source.ok);
   return (
-    <div className="mx-auto flex max-w-5xl flex-col px-4 py-8">
-      <h1 className="font-display text-4xl leading-tight">Find a job to tailor for</h1>
-      <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">
+    <div className="mx-auto flex max-w-5xl flex-col px-4 py-8 sm:py-12">
+      <p className="text-xs font-semibold tracking-[0.16em] text-copper uppercase">Live listings</p>
+      <h1 className="mt-3 font-display text-4xl leading-tight tracking-tight">Find a job to tailor for</h1>
+      <p className="mt-3 max-w-2xl text-base leading-7 text-ink-soft">
         Listings come from Remotive, Arbeitnow, Himalayas, and Remote OK. Open the original posting
         on that board. We do not host the full listing.
       </p>
@@ -50,7 +50,7 @@ function JobsBoard({ query, result }: { query: JobQuery; result: JobSearchRespon
             name="q"
             defaultValue={query.keyword}
             placeholder="Role, skill, or company"
-            className={fieldClass}
+            className={textFieldClass}
           />
         </label>
         <label className="text-sm font-semibold" htmlFor="location">
@@ -60,33 +60,30 @@ function JobsBoard({ query, result }: { query: JobQuery; result: JobSearchRespon
             name="location"
             defaultValue={query.location}
             placeholder="City, country, or remote"
-            className={fieldClass}
+            className={textFieldClass}
           />
         </label>
-        <label className="flex min-h-12 items-center gap-2 text-sm font-semibold" htmlFor="remote">
+        <label className="flex min-h-12 items-center gap-3 text-sm font-semibold" htmlFor="remote">
           <input
             id="remote"
             name="remote"
             type="checkbox"
             value="1"
             defaultChecked={query.remoteOnly}
-            className="size-4 accent-copper"
+            className="size-5 accent-copper"
           />
           Remote only
         </label>
         <label className="text-sm font-semibold" htmlFor="limit">
           Results
-          <select id="limit" name="limit" defaultValue={String(query.limit)} className={fieldClass}>
+          <select id="limit" name="limit" defaultValue={String(query.limit)} className={textFieldClass}>
             <option value="3">3</option>
             <option value="6">6</option>
             <option value="12">12</option>
             <option value="20">20</option>
           </select>
         </label>
-        <button
-          type="submit"
-          className="inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-6 text-sm font-semibold text-paper sm:col-span-2"
-        >
+        <button type="submit" className={`${primaryButtonClass} sm:col-span-2`}>
           Search jobs
         </button>
       </form>

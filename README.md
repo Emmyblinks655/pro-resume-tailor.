@@ -74,8 +74,8 @@ Passwords must be at least 8 characters. The app also rejects passwords longer t
 ### Supabase dashboard
 
 1. In the Supabase project, open Authentication → URL configuration.
-2. Set Site URL to `https://pro-resume-tailor.vercel.app`.
-3. Add redirect URL `https://pro-resume-tailor.vercel.app/auth/callback`. That is where email confirmation returns.
+2. Set Site URL to `https://proresumetailor.com`.
+3. Add redirect URL `https://proresumetailor.com/auth/callback`. The app sends people back to the host they signed up on, so also allow any preview host you still use.
 4. For local development, also allow `http://localhost:3000/auth/callback`.
 5. Authentication → Providers: enable Email. Set the minimum password length to 8 so Supabase enforces the same rule.
 6. Apply `supabase/migrations/20261113001000_profiles.sql`. It creates `public.profiles`, turns on RLS so a user can read only their own row, and adds a trigger in the private schema that inserts the profile when `auth.users` grows.
@@ -95,7 +95,7 @@ npm run build
 ## Deploy on Vercel
 
 1. Import the Git repository. Framework preset: Next.js.
-2. Add the variables from `.env.example` in Project Settings → Environment Variables. Mark `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as sensitive. Leave the AI keys empty to stay in mock mode. Leave the Supabase keys empty to keep accounts off. In the Supabase dashboard, set Site URL to `https://pro-resume-tailor.vercel.app` and the redirect URL to `https://pro-resume-tailor.vercel.app/auth/callback`.
+2. Add the variables from `.env.example` in Project Settings → Environment Variables. Mark `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as sensitive. Leave the AI keys empty to stay in mock mode. Leave the Supabase keys empty to keep accounts off. In the Supabase dashboard, set Site URL to `https://proresumetailor.com` and allow `https://proresumetailor.com/auth/callback`. Redirects in the app stay on the request host.
 3. Do not set `runtime = 'edge'`. The AI call and PDF parsing use the default Node.js runtime.
 4. Deploy. `npm run build` is the build command Vercel detects.
 

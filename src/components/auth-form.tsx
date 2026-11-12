@@ -2,10 +2,9 @@
 
 import { useActionState } from "react";
 
+import { alertClass, primaryButtonClass, textFieldClass } from "@/components/field-styles";
 import { emptyAuthState, type AuthFormState } from "@/lib/auth/form-state";
 import { PASSWORD_MIN } from "@/lib/auth/validation";
-
-const inputClass = "mt-1 min-h-12 w-full rounded-2xl border border-line bg-card px-3 text-base";
 
 export function AuthForm({
   mode,
@@ -27,17 +26,17 @@ export function AuthForm({
     <form action={formAction} className="mt-6 space-y-4" noValidate>
       <input type="hidden" name="next" value={nextPath} />
       {queryError ? (
-        <p role="alert" className="rounded-2xl bg-highlight px-3 py-2 text-sm leading-6">
+        <p role="alert" className={alertClass}>
           {queryError}
         </p>
       ) : null}
       {state.error ? (
-        <p role="alert" className="rounded-2xl bg-highlight px-3 py-2 text-sm leading-6">
+        <p role="alert" className={alertClass}>
           {state.error}
         </p>
       ) : null}
       {state.message ? (
-        <p role="status" className="rounded-2xl bg-highlight px-3 py-2 text-sm leading-6">
+        <p role="status" className={alertClass}>
           {state.message}
         </p>
       ) : null}
@@ -51,10 +50,11 @@ export function AuthForm({
           name="email"
           type="email"
           autoComplete="email"
+          inputMode="email"
           required
           aria-invalid={emailError ? true : undefined}
           aria-describedby={emailError ? "email-error" : undefined}
-          className={inputClass}
+          className={textFieldClass}
         />
         {emailError ? (
           <p id="email-error" className="mt-1 text-sm text-copper">
@@ -76,7 +76,7 @@ export function AuthForm({
           minLength={PASSWORD_MIN}
           aria-invalid={passwordError ? true : undefined}
           aria-describedby={passwordError ? "password-error" : "password-hint"}
-          className={inputClass}
+          className={textFieldClass}
         />
         <p id="password-hint" className="mt-1 text-sm text-ink-soft">
           At least {PASSWORD_MIN} characters.
@@ -102,7 +102,7 @@ export function AuthForm({
             minLength={PASSWORD_MIN}
             aria-invalid={confirmError ? true : undefined}
             aria-describedby={confirmError ? "confirm-error" : undefined}
-            className={inputClass}
+            className={textFieldClass}
           />
           {confirmError ? (
             <p id="confirm-error" className="mt-1 text-sm text-copper">
@@ -112,11 +112,7 @@ export function AuthForm({
         </div>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-copper px-5 text-base font-semibold text-white disabled:opacity-60"
-      >
+      <button type="submit" disabled={pending} className={primaryButtonClass}>
         {pending ? "Working…" : mode === "signup" ? "Create account" : "Log in"}
       </button>
     </form>

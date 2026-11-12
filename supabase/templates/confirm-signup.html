@@ -1,0 +1,45 @@
+<!--
+  Confirm signup template for Pro Resume Tailor.
+  Paste this file into Supabase → Authentication → Emails → Confirm signup.
+  Suggested subject: Your Pro Resume Tailor code
+
+  Supabase includes the 6-digit code only when this template contains {{ .Token }}.
+  A confirmation link is not required. /auth/callback remains a fallback if a link is added later.
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your Pro Resume Tailor code</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f4efe6;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4efe6;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#fffdf8;border:1px solid #e3d8c8;border-radius:24px;">
+            <tr>
+              <td style="padding:32px 28px;font-family:Georgia,'Times New Roman',serif;color:#1c1915;">
+                <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#b54a28;">
+                  Pro Resume Tailor
+                </p>
+                <h1 style="margin:16px 0 0;font-size:32px;line-height:1.15;font-weight:500;">
+                  Confirm your email
+                </h1>
+                <p style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#534c43;">
+                  Enter this code in the app to finish creating your account.
+                </p>
+                <p style="margin:24px 0 0;padding:18px 8px;background:#f4efe6;border-radius:16px;font-family:Arial,Helvetica,sans-serif;font-size:36px;line-height:1.2;letter-spacing:0.28em;text-align:center;font-weight:700;color:#1c1915;">
+                  {{ .Token }}
+                </p>
+                <p style="margin:24px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#534c43;">
+                  The code expires soon. If you did not sign up for Pro Resume Tailor, you can ignore this email.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

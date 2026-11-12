@@ -23,8 +23,9 @@ export default function PrivacyPage() {
       <p>Checkout is not live. This preview does not collect card numbers.</p>
       <p>
         If accounts are turned on, email and password sign-in is handled by Supabase Auth. Supabase stores
-        the password hash. The session lives in an httpOnly cookie. A profiles row stores the account id
-        and email so the dashboard can show them. You can read only your own row.
+        the password hash. The session lives in an httpOnly cookie. A profiles row stores the account id,
+        email, and, after onboarding, your name and an optional role. You can read only your own row, and
+        you can update only your name and role.
       </p>
     </Legal>
   );

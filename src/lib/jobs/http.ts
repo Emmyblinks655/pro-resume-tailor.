@@ -1,7 +1,7 @@
 /** Shared cache window. Remotive asks for at most a few fetches a day; this stays well under a per-minute burst. */
 export const JOBS_REVALIDATE_SECONDS = 45 * 60;
 
-const USER_AGENT = "ProResumeTailor/0.1 (+https://pro-resume-tailor.vercel.app)";
+const USER_AGENT = "ProResumeTailor/0.1 (+https://proresumetailor.com)";
 
 export async function fetchJobJson(url: string): Promise<unknown> {
   const response = await fetch(url, {

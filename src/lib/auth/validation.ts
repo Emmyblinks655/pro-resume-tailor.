@@ -9,6 +9,12 @@ export type FieldErrors = {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+export function readEmail(value: string | null | undefined): string {
+  const email = (value ?? "").trim();
+  if (!email || email.length > 254 || !EMAIL.test(email)) return "";
+  return email;
+}
+
 export function validateCredentials(
   email: string,
   password: string,
@@ -29,7 +35,31 @@ export function validateCredentials(
   return fieldErrors;
 }
 
-export const CONFIRM_EMAIL_MESSAGE = "Check your email to confirm your account.";
+export const CONFIRM_EMAIL_MESSAGE = "Check your email for a 6-digit code.";
+
+export function friendlyOtpError(message: string): string {
+  const text = message.toLowerCase();
+  if (/rate|too many|only request|once every|security purposes/.test(text)) {
+    return "Wait a minute, then request a new code.";
+  }
+  if (/expired|invalid|otp|token/.test(text)) {
+    return "That code is invalid or expired. Request a new one.";
+  }
+  if (text.length > 0 && text.length <= 180 && !message.includes("<")) return message.trim();
+  return "The code could not be checked. Try again.";
+}
+
+export function friendlyResendError(message: string): string {
+  const text = message.toLowerCase();
+  if (/rate|too many|only request|once every|security purposes/.test(text)) {
+    return "A code was just sent. Wait a minute before requesting another.";
+  }
+  if (/already confirmed|already registered|email address already/.test(text)) {
+    return "That email is already confirmed. Log in.";
+  }
+  if (text.length > 0 && text.length <= 180 && !message.includes("<")) return message.trim();
+  return "We couldn't send a new code. Try again in a minute.";
+}
 
 export function isEmailUnconfirmed(error: { message?: string; code?: string }): boolean {
   const code = (error.code ?? "").toLowerCase();

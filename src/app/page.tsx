@@ -21,16 +21,16 @@ const steps = [
 export default function HomePage() {
   return (
     <div>
-      <section className="px-4 pt-8 pb-6">
+      <section className="px-4 pt-10 pb-8 sm:pt-16">
         <div className="mx-auto max-w-5xl">
-          <p className="text-xs font-semibold tracking-[0.16em] text-copper uppercase">
+          <p className="text-xs font-semibold tracking-[0.18em] text-copper uppercase">
             Developers and freelancers
           </p>
-          <h1 className="mt-3 max-w-3xl font-display text-[2rem] leading-[1.1] text-ink sm:text-5xl">
+          <h1 className="mt-4 max-w-3xl font-display text-4xl leading-[1.08] tracking-tight text-ink sm:text-6xl">
             A role-specific resume, from the CV you already have.
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-ink sm:text-lg">{TAGLINE}</p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-ink-soft">{TAGLINE}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/tailor"
               className="inline-flex min-h-12 items-center justify-center rounded-full bg-copper px-6 text-base font-semibold text-white"
@@ -48,15 +48,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="how" className="scroll-mt-28 px-4 py-8">
+      <section id="how" className="scroll-mt-20 px-4 py-10 sm:py-14">
         <div className="mx-auto max-w-5xl">
-          <h2 className="font-display text-3xl">How it works</h2>
-          <ol className="mt-4 grid gap-3 sm:grid-cols-3">
+          <h2 className="font-display text-3xl tracking-tight sm:text-4xl">How it works</h2>
+          <ol className="mt-5 grid gap-4 sm:grid-cols-3">
             {steps.map((step, index) => (
-              <li key={step.title} className="rounded-3xl border border-line bg-card p-4">
-                <p className="font-display text-3xl text-copper">{index + 1}</p>
-                <h3 className="mt-2 text-lg font-semibold">{step.title}</h3>
-                <p className="mt-1 text-sm leading-6 text-ink-soft">{step.body}</p>
+              <li key={step.title} className="rounded-[28px] border border-line bg-card p-5 shadow-[0_16px_40px_rgba(28,25,21,0.04)]">
+                <p className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-highlight font-display text-xl text-copper">
+                  {index + 1}
+                </p>
+                <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-ink-soft">{step.body}</p>
               </li>
             ))}
           </ol>
@@ -64,8 +66,8 @@ export default function HomePage() {
       </section>
 
       <section className="px-4 py-4">
-        <div className="mx-auto max-w-5xl rounded-3xl bg-ink px-5 py-8 text-paper">
-          <h2 className="font-display text-3xl leading-tight">No subscription, ever.</h2>
+        <div className="mx-auto max-w-5xl rounded-[28px] bg-ink px-5 py-8 text-paper sm:px-8 sm:py-10">
+          <h2 className="font-display text-3xl leading-tight tracking-tight sm:text-4xl">No subscription, ever.</h2>
           <p className="mt-3 max-w-2xl text-base leading-7 text-[#f3e6d8]">
             Five tailorings cost nine dollars. You pay once. When the credits are used, nothing renews
             and nothing is charged again. There is no trial that turns into a plan.
@@ -79,9 +81,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="px-4 py-8">
+      <section className="px-4 py-10 sm:py-14">
         <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2">
-          <article className="rounded-3xl border border-line bg-card p-5">
+          <article className="rounded-[28px] border border-line bg-card p-5 shadow-[0_16px_40px_rgba(28,25,21,0.04)] sm:p-6">
             <h2 className="font-display text-2xl">It will not invent a career</h2>
             <p className="mt-2 text-sm leading-6 text-ink-soft">
               The editor can rephrase, reorder, and emphasise. It cannot add an employer, a metric, or a
@@ -89,7 +91,7 @@ export default function HomePage() {
               the match.
             </p>
           </article>
-          <article className="rounded-3xl border border-line bg-card p-5">
+          <article className="rounded-[28px] border border-line bg-card p-5 shadow-[0_16px_40px_rgba(28,25,21,0.04)] sm:p-6">
             <h2 className="font-display text-2xl">Built for more than one market</h2>
             <p className="mt-2 text-sm leading-6 text-ink-soft">
               United States, United Kingdom, Canada, Germany, and anywhere else you apply. Download US
@@ -100,9 +102,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="faq" className="scroll-mt-28 px-4 py-4">
+      <section id="faq" className="scroll-mt-20 px-4 py-8 sm:py-12">
         <div className="mx-auto max-w-5xl">
-          <h2 className="font-display text-3xl">FAQ</h2>
+          <h2 className="font-display text-3xl tracking-tight sm:text-4xl">FAQ</h2>
           <div className="mt-4">
             <FaqList />
           </div>

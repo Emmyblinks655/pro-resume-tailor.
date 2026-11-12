@@ -1,7 +1,16 @@
-const PROTECTED = ["/tailor", "/dashboard"];
+const AUTH_REQUIRED = ["/tailor", "/dashboard", "/onboarding"];
+const PROFILE_GATED = ["/tailor", "/dashboard"];
+
+function matches(pathname: string, paths: readonly string[]): boolean {
+  return paths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+}
 
 export function isProtectedPath(pathname: string): boolean {
-  return PROTECTED.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  return matches(pathname, AUTH_REQUIRED);
+}
+
+export function isProfileGatedPath(pathname: string): boolean {
+  return matches(pathname, PROFILE_GATED);
 }
 
 /** Keep post-login redirects on this site. */
