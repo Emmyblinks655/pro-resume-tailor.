@@ -29,10 +29,18 @@ export function validateCredentials(
   return fieldErrors;
 }
 
+export const CONFIRM_EMAIL_MESSAGE = "Check your email to confirm your account.";
+
+export function isEmailUnconfirmed(error: { message?: string; code?: string }): boolean {
+  const code = (error.code ?? "").toLowerCase();
+  const message = (error.message ?? "").toLowerCase();
+  return code === "email_not_confirmed" || /not confirmed/.test(message);
+}
+
 export function friendlyAuthError(message: string): string {
   const text = message.trim();
   if (/invalid login credentials/i.test(text)) return "That email and password did not match.";
-  if (/email not confirmed/i.test(text)) return "Confirm your email before logging in. Check your inbox for the link.";
+  if (isEmailUnconfirmed({ message: text })) return CONFIRM_EMAIL_MESSAGE;
   if (/already registered|already been registered|user already exists/i.test(text)) {
     return "An account with that email already exists. Log in instead.";
   }
