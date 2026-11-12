@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
+
+import { AuthNav } from "@/components/auth-nav";
 
 const links = [
   { href: "/#how", label: "How it works" },
@@ -22,10 +25,13 @@ export function SiteHeader() {
       </div>
       <nav className="mx-auto flex max-w-5xl gap-5 overflow-x-auto px-4 pb-3 text-sm text-ink-soft">
         {links.map((link) => (
-          <Link key={link.href} href={link.href} className="shrink-0 underline-offset-4 hover:underline">
+          <Link key={link.href} href={link.href} className="inline-flex min-h-11 shrink-0 items-center underline-offset-4 hover:underline">
             {link.label}
           </Link>
         ))}
+        <Suspense fallback={null}>
+          <AuthNav />
+        </Suspense>
       </nav>
     </header>
   );
