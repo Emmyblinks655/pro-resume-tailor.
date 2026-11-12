@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { AccountsNotice } from "@/components/accounts-notice";
@@ -23,6 +24,7 @@ export default function DashboardPage() {
 }
 
 async function DashboardBody() {
+  await connection();
   if (!accountsConfigured()) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-8">

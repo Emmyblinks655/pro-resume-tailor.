@@ -5,11 +5,21 @@ import { redirect } from "next/navigation";
 
 import type { AuthFormState } from "@/lib/auth/form-state";
 import { safeNextPath } from "@/lib/auth/paths";
-import { friendlyAuthError, validateCredentials, type FieldErrors } from "@/lib/auth/validation";
+import {
+  CONFIRM_EMAIL_MESSAGE,
+  friendlyAuthError,
+  isEmailUnconfirmed,
+  validateCredentials,
+  type FieldErrors,
+} from "@/lib/auth/validation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 function failure(error: string, fieldErrors: FieldErrors = {}): AuthFormState {
   return { error, message: null, fieldErrors };
+}
+
+function confirmEmail(): AuthFormState {
+  return { error: null, message: CONFIRM_EMAIL_MESSAGE, fieldErrors: {} };
 }
 
 async function requestOrigin(): Promise<string> {
@@ -36,7 +46,7 @@ export async function login(_previous: AuthFormState, formData: FormData): Promi
   if (!supabase) return failure("Accounts aren't configured yet.");
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return failure(friendlyAuthError(error.message));
+  if (error) return isEmailUnconfirmed(error) ? confirmEmail() : failure(friendlyAuthError(error.message));
   redirect(nextPath);
 }
 
@@ -59,14 +69,8 @@ export async function signup(_previous: AuthFormState, formData: FormData): Prom
       emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
     },
   });
-  if (error) return failure(friendlyAuthError(error.message));
-  if (!data.session) {
-    return {
-      error: null,
-      message: "Check your email for a confirmation link, then log in.",
-      fieldErrors: {},
-    };
-  }
+  if (error) return isEmailUnconfirmed(error) ? confirmEmail() : failure(friendlyAuthError(error.message));
+  if (!data.session) return confirmEmail();
   redirect(nextPath);
 }
 

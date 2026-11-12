@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { AccountsNotice } from "@/components/accounts-notice";
@@ -21,6 +22,7 @@ export default function TailorPage() {
 }
 
 async function TailorGate() {
+  await connection();
   if (!accountsConfigured()) {
     return (
       <>

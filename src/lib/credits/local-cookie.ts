@@ -118,11 +118,17 @@ function persistIfNeeded(jar: CookieStore, stored: StoredCredits) {
   }
 }
 
+/**
+ * Read the preview balance. Never writes the cookie: Server Components cannot
+ * set cookies, and a missing cookie is shown as the starting balance until a
+ * route handler records a real change.
+ */
 export async function getLocalCredits(subjectId?: string): Promise<CreditBalance> {
+  void subjectId;
   const jar = await cookies();
-  const stored = load(jar, subjectId);
-  persistIfNeeded(jar, stored);
-  return publicBalance(stored.remaining);
+  const existing = decode(jar.get(COOKIE)?.value);
+  if (!existing) return publicBalance(startingCredits());
+  return publicBalance(existing.remaining);
 }
 
 export async function consumeLocalCredit(subjectId?: string): Promise<{ ok: boolean; balance: CreditBalance }> {
