@@ -29,8 +29,9 @@ export type CreditBalance = {
  * - credit_balances(subject_id text primary key, remaining int, updated_at timestamptz)
  * - credit_ledger(id uuid primary key, subject_id text, delta int, reason text, pack_id text, created_at timestamptz)
  *
- * Route handlers should keep calling these functions. A Supabase implementation
- * can replace the cookie body once accounts exist, using the auth user id as subjectId.
+ * The cookie implementation is still the live ledger. When someone is logged in,
+ * callers pass their auth user id as subjectId so the preview balance is tied to
+ * that account. Payments stay stubbed. A Supabase ledger can replace this body later.
  */
 export interface CreditsRepository {
   getBalance(subjectId: string): Promise<CreditBalance>;

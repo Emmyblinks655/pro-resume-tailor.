@@ -28,6 +28,11 @@ export const FAQ = [
       "Developers and freelancers applying in the United States, the United Kingdom, Canada, Germany, and other markets. The resume stays in your words.",
   },
   {
+    question: "Do I need an account?",
+    answer:
+      "When Supabase is configured, you sign up with an email and a password of at least 8 characters before tailoring. Until those keys are set, the login page says accounts are not configured yet and the tailor stays open. Passwords are hashed by Supabase. This app does not keep them.",
+  },
+  {
     question: "Do you store my resume?",
     answer:
       "Not in a database in this version. The text is used to produce the draft for that request. Preview credits live in a cookie on your browser. See the privacy page for the draft policy.",

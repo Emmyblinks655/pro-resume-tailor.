@@ -1,5 +1,7 @@
 import { getAiStatus, tailorResume } from "@/lib/ai";
-import { consumeLocalCredit, refundLocalCredit } from "@/lib/credits/local-cookie";
+import { consumeCredit, refundCredit } from "@/lib/credits";
+import { currentAccount } from "@/lib/auth/session";
+import { accountsConfigured } from "@/lib/supabase/env";
 import { z } from "zod";
 
 const requestSchema = z.object({
@@ -26,7 +28,14 @@ export async function POST(request: Request) {
     );
   }
 
-  const spent = await consumeLocalCredit();
+  if (accountsConfigured()) {
+    const account = await currentAccount();
+    if (!account) {
+      return Response.json({ error: "Log in to tailor a resume." }, { status: 401 });
+    }
+  }
+
+  const spent = await consumeCredit();
   if (!spent.ok) {
     return Response.json(
       {
@@ -41,7 +50,7 @@ export async function POST(request: Request) {
     const result = await tailorResume(parsed.data);
     return Response.json({ ...result, credits: spent.balance });
   } catch (error) {
-    const credits = await refundLocalCredit();
+    const credits = await refundCredit();
     const message =
       error instanceof Error
         ? error.message
