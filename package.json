@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --import ./scripts/register-ts.mjs --test src/lib/jobs/normalise.test.mts src/lib/auth/auth.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",

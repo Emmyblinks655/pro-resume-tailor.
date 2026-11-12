@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ResumePreview } from "@/components/resume-preview";
 import type { AiStatus, TailorSuccess } from "@/lib/ai/types";
 import type { CreditBalance } from "@/lib/credits/types";
+import { JOB_DRAFT_KEY, RESUME_DRAFT_KEY } from "@/lib/jobs/draft";
 import { SAMPLE_JOB, SAMPLE_RESUME } from "@/lib/sample-data";
 import type { PageSize } from "@/lib/resume/types";
 
@@ -45,6 +46,34 @@ export function TailorStudio() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      try {
+        const draft = sessionStorage.getItem(JOB_DRAFT_KEY);
+        if (draft) {
+          setJobDescription(draft);
+          sessionStorage.removeItem(JOB_DRAFT_KEY);
+        }
+        const savedResume = sessionStorage.getItem(RESUME_DRAFT_KEY);
+        if (savedResume) {
+          setResumeText((current) => (current.trim() ? current : savedResume));
+        }
+      } catch {
+        // The form still works when storage is blocked.
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!resumeText.trim()) return;
+    try {
+      sessionStorage.setItem(RESUME_DRAFT_KEY, resumeText);
+    } catch {
+      // Ignore storage failures.
+    }
+  }, [resumeText]);
 
   async function onFile(file: File | undefined) {
     if (!file) return;

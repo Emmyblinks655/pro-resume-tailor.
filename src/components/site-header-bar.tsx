@@ -7,6 +7,7 @@ import { useEffect, useId, useState } from "react";
 import { logout } from "@/lib/auth/actions";
 
 const links = [
+  { href: "/jobs", label: "Jobs" },
   { href: "/#how", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
   { href: "/#faq", label: "FAQ" },
