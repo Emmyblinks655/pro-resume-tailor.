@@ -1,7 +1,8 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { isProtectedPath, safeNextPath } from "@/lib/auth/paths";
+import { isProfileGatedPath, isProtectedPath, safeNextPath } from "@/lib/auth/paths";
+import { fullNameFromRow, needsOnboarding, withOnboarding } from "@/lib/auth/profile";
 import { accountsConfigured, supabaseAnonKey, supabaseUrl } from "@/lib/supabase/env";
 
 const CACHE_HEADERS = ["cache-control", "expires", "pragma"] as const;
@@ -63,14 +64,27 @@ export async function refreshSession(request: NextRequest) {
 
   const { data } = await supabase.auth.getClaims();
   const userId = typeof data?.claims.sub === "string" ? data.claims.sub : null;
+  const next = safeNextPath(`${request.nextUrl.pathname}${request.nextUrl.search}`, request.nextUrl.pathname);
   if (!userId && isProtectedPath(request.nextUrl.pathname)) {
     const redirectUrl = request.nextUrl.clone();
-    const next = safeNextPath(`${request.nextUrl.pathname}${request.nextUrl.search}`, request.nextUrl.pathname);
     redirectUrl.pathname = "/login";
     redirectUrl.search = `?next=${encodeURIComponent(next)}`;
     const redirectResponse = NextResponse.redirect(redirectUrl);
     copySession(supabaseResponse, redirectResponse);
     return redirectResponse;
+  }
+
+  if (userId && isProfileGatedPath(request.nextUrl.pathname)) {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", userId)
+      .maybeSingle();
+    if (!profileError && needsOnboarding(fullNameFromRow(profile))) {
+      const redirectResponse = NextResponse.redirect(new URL(withOnboarding(next, true), request.url));
+      copySession(supabaseResponse, redirectResponse);
+      return redirectResponse;
+    }
   }
 
   return supabaseResponse;

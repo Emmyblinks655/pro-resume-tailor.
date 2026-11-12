@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { AccountsNotice } from "@/components/accounts-notice";
+import { AuthCard } from "@/components/auth-card";
 import { AuthForm } from "@/components/auth-form";
 import { signup } from "@/lib/auth/actions";
+import { redirectForAccount } from "@/lib/auth/destination";
 import { safeNextPath } from "@/lib/auth/paths";
-import { currentAccount } from "@/lib/auth/session";
 import { accountsConfigured } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
@@ -33,27 +33,22 @@ async function SignupPanel({
 
   if (!accountsConfigured()) {
     return (
-      <div className="mx-auto max-w-md px-4 py-8">
-        <p className="text-xs font-semibold tracking-[0.16em] text-copper uppercase">Account</p>
-        <h1 className="mt-3 font-display text-4xl">Sign up</h1>
+      <AuthCard kicker="Account" title="Sign up">
         <div className="mt-6">
           <AccountsNotice detail="Add the Supabase URL and publishable anon key on the server, then restart." />
         </div>
-      </div>
+      </AuthCard>
     );
   }
 
-  const account = await currentAccount();
-  if (account) redirect(nextPath);
+  await redirectForAccount(nextPath);
 
   return (
-    <div className="mx-auto max-w-md px-4 py-8">
-      <p className="text-xs font-semibold tracking-[0.16em] text-copper uppercase">Account</p>
-      <h1 className="mt-3 font-display text-4xl">Sign up</h1>
-      <p className="mt-3 text-base leading-7 text-ink-soft">
-        Email and a password of at least 8 characters. Supabase stores the password hash. This app never
-        keeps the password.
-      </p>
+    <AuthCard
+      kicker="Account"
+      title="Sign up"
+      lede="Email and a password of at least 8 characters. We'll email a 6-digit code to confirm the address. Supabase stores the password hash. This app never keeps the password."
+    >
       <AuthForm mode="signup" nextPath={nextPath} action={signup} queryError={null} />
       <p className="mt-4 text-sm leading-6 text-ink-soft">
         Already have an account?{" "}
@@ -61,6 +56,6 @@ async function SignupPanel({
           Log in
         </Link>
       </p>
-    </div>
+    </AuthCard>
   );
 }

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { AccountsNotice } from "@/components/accounts-notice";
+import { AuthCard } from "@/components/auth-card";
 import { AuthForm } from "@/components/auth-form";
 import { login } from "@/lib/auth/actions";
+import { redirectForAccount } from "@/lib/auth/destination";
+import { verifyPath } from "@/lib/auth/otp";
 import { safeNextPath } from "@/lib/auth/paths";
-import { currentAccount } from "@/lib/auth/session";
 import { accountsConfigured } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
@@ -31,37 +32,42 @@ async function LoginPanel({
   const params = await searchParams;
   const nextPath = safeNextPath(typeof params.next === "string" ? params.next : null);
   const queryError =
-    params.error === "confirm" ? "That confirmation link did not finish. Request a new one by signing up again, or log in if you already confirmed." : null;
+    params.error === "confirm"
+      ? "That confirmation link did not finish. Enter the 6-digit code instead, or log in if you already confirmed."
+      : null;
 
   if (!accountsConfigured()) {
     return (
-      <div className="mx-auto max-w-md px-4 py-8">
-        <p className="text-xs font-semibold tracking-[0.16em] text-copper uppercase">Account</p>
-        <h1 className="mt-3 font-display text-4xl">Log in</h1>
+      <AuthCard kicker="Account" title="Log in">
         <div className="mt-6">
           <AccountsNotice detail="Add the Supabase URL and publishable anon key on the server, then restart." />
         </div>
-      </div>
+      </AuthCard>
     );
   }
 
-  const account = await currentAccount();
-  if (account) redirect(nextPath);
+  await redirectForAccount(nextPath);
 
   return (
-    <div className="mx-auto max-w-md px-4 py-8">
-      <p className="text-xs font-semibold tracking-[0.16em] text-copper uppercase">Account</p>
-      <h1 className="mt-3 font-display text-4xl">Log in</h1>
-      <p className="mt-3 text-base leading-7 text-ink-soft">
-        Use the email and password for your Pro Resume Tailor account.
-      </p>
+    <AuthCard
+      kicker="Account"
+      title="Log in"
+      lede="Use the email and password for your Pro Resume Tailor account."
+    >
       <AuthForm mode="login" nextPath={nextPath} action={login} queryError={queryError} />
+      {queryError ? (
+        <p className="mt-4 text-sm leading-6">
+          <Link href={verifyPath("", nextPath)} className="font-semibold text-ink underline">
+            Enter a code
+          </Link>
+        </p>
+      ) : null}
       <p className="mt-4 text-sm leading-6 text-ink-soft">
         No account yet?{" "}
         <Link href={`/signup?next=${encodeURIComponent(nextPath)}`} className="font-semibold text-ink underline">
           Sign up
         </Link>
       </p>
-    </div>
+    </AuthCard>
   );
 }

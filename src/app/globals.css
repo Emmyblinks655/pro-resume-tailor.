@@ -23,8 +23,16 @@
 }
 
 body {
-  background: var(--paper);
+  background:
+    radial-gradient(1200px 420px at 50% -180px, rgb(181 74 40 / 0.09), transparent 62%),
+    var(--paper);
   color: var(--ink);
+}
+
+a,
+button,
+summary {
+  -webkit-tap-highlight-color: rgb(181 74 40 / 0.16);
 }
 
 ::selection {

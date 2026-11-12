@@ -5,6 +5,8 @@ import { Suspense } from "react";
 
 import { AccountsNotice } from "@/components/accounts-notice";
 import { TailorStudio } from "@/components/tailor-studio";
+import { withOnboarding } from "@/lib/auth/profile";
+import { readOwnProfile } from "@/lib/auth/profile-server";
 import { currentAccount } from "@/lib/auth/session";
 import { accountsConfigured } from "@/lib/supabase/env";
 
@@ -35,5 +37,7 @@ async function TailorGate() {
   }
   const account = await currentAccount();
   if (!account) redirect("/login?next=/tailor");
+  const profile = await readOwnProfile(account.id, account.email);
+  if (profile.status === "needs-onboarding") redirect(withOnboarding("/tailor", true));
   return <TailorStudio />;
 }
