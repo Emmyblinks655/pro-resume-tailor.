@@ -15,7 +15,7 @@ export default function TermsPage() {
         does not promise interviews, offers, or that a parser will score you a particular way.
       </p>
       <p>
-        The paid product is a one-time pack of five tailorings for nine US dollars. It is not a
+        The paid product is a one-time pack of five tailorings for ₦9,900. It is not a
         subscription. There is no trial that converts into a recurring charge. Nothing renews when the
         tailorings are used.
       </p>

@@ -1,3 +1,5 @@
+import { PACK_PRICE_LABEL } from "@/lib/packs";
+
 export type CreditReason = "seed" | "tailor" | "refund" | "grant";
 
 export type CreditLedgerEntry = {
@@ -17,21 +19,14 @@ export type StoredCredits = {
 
 export type CreditBalance = {
   remaining: number;
-  source: "local-cookie";
+  source: "local-cookie" | "supabase";
   label: string;
   note: string;
 };
 
 /**
- * Ledger seam for a later Supabase adapter.
- *
- * Suggested tables, not created in this scaffold:
- * - credit_balances(subject_id text primary key, remaining int, updated_at timestamptz)
- * - credit_ledger(id uuid primary key, subject_id text, delta int, reason text, pack_id text, created_at timestamptz)
- *
- * The cookie implementation is still the live ledger. When someone is logged in,
- * callers pass their auth user id as subjectId so the preview balance is tied to
- * that account. Payments stay stubbed. A Supabase ledger can replace this body later.
+ * Signed-in balances live in public.credit_balances.
+ * The cookie ledger remains only when Supabase accounts are not configured.
  */
 export interface CreditsRepository {
   getBalance(subjectId: string): Promise<CreditBalance>;
@@ -40,4 +35,7 @@ export interface CreditsRepository {
 }
 
 export const CREDIT_NOTE =
-  "Tailorings left on this browser. Buy five more for $9 whenever you need them. Nothing renews.";
+  `Tailorings left on this browser. Buy five more for ${PACK_PRICE_LABEL} whenever you need them. Nothing renews.`;
+
+export const ACCOUNT_CREDIT_NOTE =
+  `Buy five more for ${PACK_PRICE_LABEL} whenever you need them. Nothing renews.`;

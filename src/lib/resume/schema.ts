@@ -241,6 +241,13 @@ export function parseTailoredResume(input: unknown): TailoredResume {
 export function parseModelJson(text: string): unknown {
   const trimmed = text.trim();
   const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
-  const body = fenced?.[1] ?? trimmed;
-  return JSON.parse(body);
+  const body = (fenced?.[1] ?? trimmed).trim();
+  try {
+    return JSON.parse(body);
+  } catch {
+    const start = body.indexOf("{");
+    const end = body.lastIndexOf("}");
+    if (start >= 0 && end > start) return JSON.parse(body.slice(start, end + 1));
+    throw new Error("The tailor did not return a readable resume.");
+  }
 }

@@ -1,6 +1,7 @@
 import { getAiStatus, tailorResume } from "@/lib/ai";
 import { consumeCredit, refundCredit } from "@/lib/credits";
 import { currentAccount } from "@/lib/auth/session";
+import { PACK_PRICE_LABEL } from "@/lib/packs";
 import { accountsConfigured } from "@/lib/supabase/env";
 import { z } from "zod";
 
@@ -35,11 +36,17 @@ export async function POST(request: Request) {
     }
   }
 
-  const spent = await consumeCredit();
+  let spent: Awaited<ReturnType<typeof consumeCredit>>;
+  try {
+    spent = await consumeCredit();
+  } catch (error) {
+    console.error("Credit spend failed.", error);
+    return Response.json({ error: "The tailor could not finish. Please try again." }, { status: 502 });
+  }
   if (!spent.ok) {
     return Response.json(
       {
-        error: "No tailorings left. Get 5 more for $9.",
+        error: `No tailorings left. Get 5 more for ${PACK_PRICE_LABEL}.`,
         credits: spent.balance,
       },
       { status: 402 },
@@ -52,7 +59,7 @@ export async function POST(request: Request) {
   } catch (error) {
     const credits = await refundCredit();
     const raw = error instanceof Error ? error.message : "";
-    const leaked = /api[_ -]?key|gemini|claude|anthropic|google|mock|configured|supabase/i.test(raw);
+    const leaked = /api[_ -]?key|gemini|claude|anthropic|google|grok|xai|openai|paystack|mock|configured|supabase|secret/i.test(raw);
     const message = leaked || !raw ? "The tailor could not finish. Please try again." : raw;
     return Response.json({ error: message, credits }, { status: 502 });
   }

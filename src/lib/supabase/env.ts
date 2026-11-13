@@ -15,7 +15,7 @@ export function supabaseUrl(): string | null {
   }
 }
 
-/** Publishable key. The service role key is never read. */
+/** Publishable key. The service role key is read only by src/lib/supabase/admin.ts. */
 export function supabaseAnonKey(): string | null {
   const value =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ||

@@ -1,5 +1,9 @@
+import { currentAccount } from "@/lib/auth/session";
 import { getPack } from "@/lib/packs";
-import { getPaymentProvider } from "@/lib/payments";
+import { startPaystackCheckout } from "@/lib/payments/paystack";
+import { checkoutFallbackPath, paystackReady } from "@/lib/payments/paystack-config";
+import { creditsStoreConfigured } from "@/lib/supabase/admin";
+import { accountsConfigured } from "@/lib/supabase/env";
 
 export async function POST(request: Request) {
   let json: unknown;
@@ -12,7 +16,24 @@ export async function POST(request: Request) {
   if (typeof packId !== "string" || !getPack(packId)) {
     return Response.json({ error: "Unknown pack." }, { status: 400 });
   }
-  const provider = getPaymentProvider();
-  const result = await provider.createCheckout({ packId });
-  return Response.json({ ...result, providerLabel: provider.label });
+
+  const account = accountsConfigured() ? await currentAccount() : null;
+  if (!account) {
+    return Response.json({ url: checkoutFallbackPath(false) });
+  }
+  if (!account.email || !paystackReady() || !creditsStoreConfigured()) {
+    return Response.json({ url: checkoutFallbackPath(true) });
+  }
+
+  try {
+    const url = await startPaystackCheckout({
+      packId,
+      userId: account.id,
+      email: account.email,
+    });
+    return Response.json({ url });
+  } catch (error) {
+    console.error("Checkout failed.", error);
+    return Response.json({ error: "Checkout could not start. Please try again." }, { status: 502 });
+  }
 }

@@ -4,7 +4,7 @@ import { PriceCard } from "@/components/price-card";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Five resume tailorings for nine dollars, paid once. No trial and no subscription.",
+  description: "Five resume tailorings for ₦9,900, paid once. No trial and no subscription.",
 };
 
 export default function PricingPage() {

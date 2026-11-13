@@ -1,9 +1,9 @@
 import { CheckoutButton } from "@/components/checkout-button";
-import { CREDIT_PACKS } from "@/lib/packs";
+import { CREDIT_PACKS, PACK_PRICE_BUTTON, PACK_PRICE_LABEL } from "@/lib/packs";
 
 const points = [
   "Five resume tailorings",
-  "One payment of $9",
+  `One payment of ${PACK_PRICE_LABEL}`,
   "Nothing renews when they are used",
   "ATS-safe PDF in US Letter or A4",
   "Your own words only — nothing invented",
@@ -39,7 +39,7 @@ export function PriceCard() {
           ))}
         </ul>
         <div className="mt-6">
-          <CheckoutButton packId={pack.id} label={`Get ${pack.credits} tailorings for ${pack.priceLabel}`} />
+          <CheckoutButton packId={pack.id} label={PACK_PRICE_BUTTON} />
         </div>
         <p className="mt-3 text-center text-sm leading-6 text-ink-soft">Pay once. Nothing renews.</p>
       </div>

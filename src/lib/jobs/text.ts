@@ -159,6 +159,17 @@ export function salaryText(value: unknown): string | null {
   return text || null;
 }
 
+/** http(s) links only. Rejects hashes, javascript URLs, and empty strings. */
+export function externalHttpUrl(value: string): string | null {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function excerpt(text: string, max = 220): string {
   const flat = text.replace(/\s+/g, " ").trim();
   if (flat.length <= max) return flat;

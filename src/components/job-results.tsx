@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { JOB_DRAFT_KEY, RESUME_DRAFT_KEY, jobDraftText } from "@/lib/jobs/draft";
 import { keywordOverlapRanker } from "@/lib/jobs/fit";
-import { excerpt, formatPosted } from "@/lib/jobs/text";
+import { excerpt, externalHttpUrl, formatPosted } from "@/lib/jobs/text";
 import { JOB_SOURCES, type Job } from "@/lib/jobs/types";
 
 export function JobResults({ jobs }: { jobs: Job[] }) {
@@ -70,7 +70,9 @@ export function JobResults({ jobs }: { jobs: Job[] }) {
         </p>
       ) : (
         <ul className="flex flex-col gap-3">
-          {ranked.map((job) => (
+          {ranked.map((job) => {
+            const viewUrl = externalHttpUrl(job.url);
+            return (
             <li key={job.id} className="rounded-[28px] border border-line bg-card p-5 shadow-[0_22px_50px_-32px_rgba(18,36,28,0.45)]">
               <div className="flex flex-wrap items-center gap-2">
                 <a
@@ -100,14 +102,16 @@ export function JobResults({ jobs }: { jobs: Job[] }) {
               ) : null}
               <p className="mt-3 text-sm leading-6 text-ink-soft">{excerpt(job.description)}</p>
               <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                <a
-                  href={job.url}
-                  target="_blank"
-                  rel="noopener"
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-paper px-4 text-sm font-semibold"
-                >
-                  View job
-                </a>
+                {viewUrl ? (
+                  <a
+                    href={viewUrl}
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-paper px-4 text-sm font-semibold"
+                  >
+                    View job
+                  </a>
+                ) : null}
                 <button
                   type="button"
                   onClick={() => tailor(job)}
@@ -117,7 +121,8 @@ export function JobResults({ jobs }: { jobs: Job[] }) {
                 </button>
               </div>
             </li>
-          ))}
+            );
+          })}
         </ul>
       )}
     </div>
