@@ -4,6 +4,7 @@ import { Fraunces, Manrope } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TAGLINE } from "@/lib/copy";
+import { siteUrl } from "@/lib/site";
 
 import "./globals.css";
 
@@ -19,19 +20,19 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-const siteUrl = "https://proresumetailor.com";
+const publicSite = siteUrl();
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Pro Resume Tailor",
-  url: siteUrl,
-  logo: `${siteUrl}/logo.png`,
+  url: publicSite,
+  logo: `${publicSite}/logo.png`,
   description: TAGLINE,
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(publicSite),
   title: {
     default: "Pro Resume Tailor",
     template: "%s · Pro Resume Tailor",
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteUrl,
+    url: publicSite,
     siteName: "Pro Resume Tailor",
     title: "Pro Resume Tailor",
     description: TAGLINE,

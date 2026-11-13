@@ -20,7 +20,7 @@ export default function PrivacyPage() {
         added.
       </p>
       <p>
-        Tailorings remaining are kept for this browser. This app does not collect or store card numbers. A
+        Tailorings you buy are kept on your account. This app does not collect or store card numbers. A
         purchase is a one-time pack.
       </p>
       <p>

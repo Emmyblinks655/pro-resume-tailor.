@@ -7,6 +7,7 @@ import { ResumePreview } from "@/components/resume-preview";
 import type { TailorSuccess } from "@/lib/ai/types";
 import type { CreditBalance } from "@/lib/credits/types";
 import { JOB_DRAFT_KEY, RESUME_DRAFT_KEY } from "@/lib/jobs/draft";
+import { PACK_PRICE_BUTTON } from "@/lib/packs";
 import { SAMPLE_JOB, SAMPLE_RESUME } from "@/lib/sample-data";
 import type { PageSize } from "@/lib/resume/types";
 
@@ -174,7 +175,7 @@ export function TailorStudio() {
           <span className="font-semibold text-ink">{credits.remaining}</span>{" "}
           {credits.remaining === 1 ? "tailoring" : "tailorings"} left.{" "}
           <Link href="/pricing" className="font-semibold text-accent underline-offset-4 hover:underline">
-            Get 5 tailorings for $9
+            {PACK_PRICE_BUTTON}
           </Link>
         </p>
       ) : (
@@ -257,7 +258,7 @@ export function TailorStudio() {
         <p className="text-sm leading-6 text-ink-soft">
           You have no tailorings left.{" "}
           <Link href="/pricing" className="font-semibold text-accent underline-offset-4 hover:underline">
-            Get 5 tailorings for $9
+            {PACK_PRICE_BUTTON}
           </Link>
         </p>
       ) : null}

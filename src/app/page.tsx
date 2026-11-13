@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { FaqList } from "@/components/faq-list";
 import { PriceCard } from "@/components/price-card";
+import { PACK_PRICE_BUTTON, PACK_PRICE_LABEL } from "@/lib/packs";
 
 const steps = [
   {
@@ -35,7 +36,7 @@ export default function HomePage() {
             <p className="mt-5 max-w-xl text-lg leading-8 text-ink-soft">
               Paste the CV you already have and the role you want. Pro Resume Tailor reorders and
               emphasises the skills you actually listed, then gives you a single-column PDF. Nothing
-              invented. Five tailorings for $9, once.
+              invented. Five tailorings for {PACK_PRICE_LABEL}, once.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -48,7 +49,7 @@ export default function HomePage() {
                 href="/pricing"
                 className="inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-card px-6 text-base font-semibold shadow-sm hover:border-accent/30"
               >
-                Get 5 tailorings for $9
+                {PACK_PRICE_BUTTON}
               </Link>
             </div>
             <ul className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-ink-soft">
@@ -111,7 +112,7 @@ export default function HomePage() {
           <div>
             <p className="text-xs font-bold tracking-[0.16em] text-accent uppercase">Pricing</p>
             <h2 className="mt-3 font-display text-4xl leading-tight tracking-tight sm:text-5xl">
-              Five tailorings. Nine dollars. Once.
+              Five tailorings. {PACK_PRICE_LABEL}. Once.
             </h2>
             <p className="mt-4 max-w-xl text-base leading-7 text-ink-soft">
               No subscription and no trial that turns into a plan. Use the tailorings when you apply.

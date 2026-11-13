@@ -1,5 +1,5 @@
 import { tailorWithAnthropic, anthropicModel } from "@/lib/ai/anthropic";
-import { geminiModel, tailorWithGemini } from "@/lib/ai/gemini";
+import { grokModel, tailorWithGrok } from "@/lib/ai/grok";
 import { MOCK_LABEL, readRequestedProvider, tailorLocally, type AiStatus, type TailorInput, type TailorSuccess } from "@/lib/ai/types";
 
 export function getAiStatus(): AiStatus {
@@ -18,13 +18,13 @@ export function getAiStatus(): AiStatus {
       requestedProvider,
     };
   }
-  if (!process.env.GEMINI_API_KEY?.trim()) {
+  if (!process.env.XAI_API_KEY?.trim()) {
     return { mode: "mock", modeLabel: MOCK_LABEL, model: null, requestedProvider };
   }
   return {
-    mode: "gemini",
+    mode: "grok",
     modeLabel: "Tailored from your resume",
-    model: geminiModel(),
+    model: grokModel(),
     requestedProvider,
   };
 }
@@ -35,8 +35,7 @@ export async function tailorResume(input: TailorInput): Promise<TailorSuccess> {
     return { ...status, resume: tailorLocally(input), warnings: [] };
   }
   try {
-    const drafted =
-      status.mode === "anthropic" ? await tailorWithAnthropic(input) : await tailorWithGemini(input);
+    const drafted = status.mode === "anthropic" ? await tailorWithAnthropic(input) : await tailorWithGrok(input);
     return { ...status, ...drafted };
   } catch (error) {
     console.error("Resume tailor failed.", error);

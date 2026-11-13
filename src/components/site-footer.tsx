@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandLink } from "@/components/logo";
+import { PACK_PRICE_LABEL } from "@/lib/packs";
 
 const product = [
   { href: "/#how", label: "How it works" },
@@ -23,7 +24,7 @@ export function SiteFooter() {
           <BrandLink tone="inverse" />
           <p className="mt-4 max-w-sm text-sm leading-6">
             Role-specific resumes for developers and freelancers. Your words, reordered for the job.
-            Five tailorings for $9, once.
+            Five tailorings for {PACK_PRICE_LABEL}, once.
           </p>
         </div>
         <nav aria-label="Product">

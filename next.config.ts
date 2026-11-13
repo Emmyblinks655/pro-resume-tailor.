@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   devIndicators: false,
-  serverExternalPackages: ["unpdf", "mammoth", "@google/genai", "@anthropic-ai/sdk"],
+  serverExternalPackages: ["unpdf", "mammoth", "openai", "@anthropic-ai/sdk"],
   turbopack: {
     rules: {
       "*.css": {

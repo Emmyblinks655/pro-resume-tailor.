@@ -2,7 +2,7 @@ import { emphasize } from "@/lib/resume/emphasize";
 import { parseResume } from "@/lib/resume/parse";
 import type { TailoredResume } from "@/lib/resume/types";
 
-export type TailorMode = "gemini" | "anthropic" | "mock";
+export type TailorMode = "grok" | "anthropic" | "mock";
 
 export type TailorInput = {
   resumeText: string;
@@ -13,7 +13,7 @@ export type AiStatus = {
   mode: TailorMode;
   modeLabel: string;
   model: string | null;
-  requestedProvider: "gemini" | "anthropic" | "mock";
+  requestedProvider: "grok" | "anthropic" | "mock";
 };
 
 export type TailorSuccess = AiStatus & {
@@ -29,7 +29,7 @@ export function tailorLocally(input: TailorInput): TailoredResume {
 }
 
 export function readRequestedProvider(): AiStatus["requestedProvider"] {
-  const value = (process.env.AI_PROVIDER ?? "gemini").trim().toLowerCase();
-  if (value === "anthropic" || value === "mock" || value === "gemini") return value;
-  return "gemini";
+  const value = (process.env.AI_PROVIDER ?? "grok").trim().toLowerCase();
+  if (value === "anthropic" || value === "mock") return value;
+  return "grok";
 }

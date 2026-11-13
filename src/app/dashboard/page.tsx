@@ -10,23 +10,35 @@ import { withOnboarding } from "@/lib/auth/profile";
 import { readOwnProfile } from "@/lib/auth/profile-server";
 import { currentAccount } from "@/lib/auth/session";
 import { readCreditBalance } from "@/lib/credits";
+import { PACK_PRICE_BUTTON } from "@/lib/packs";
 import { accountsConfigured } from "@/lib/supabase/env";
+
+type DashboardSearch = {
+  payment?: string | string[];
+};
+
+function paymentState(value: string | string[] | undefined): "success" | "failed" | null {
+  const raw = Array.isArray(value) ? value[0] : value;
+  if (raw === "success" || raw === "failed") return raw;
+  return null;
+}
 
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "Your name, tailorings left, and a shortcut to tailor a resume.",
 };
 
-export default function DashboardPage() {
+export default function DashboardPage({ searchParams }: { searchParams: Promise<DashboardSearch> }) {
   return (
     <Suspense fallback={<p className="mx-auto max-w-3xl px-4 py-8 text-sm text-ink-soft">Loading dashboard…</p>}>
-      <DashboardBody />
+      <DashboardBody searchParams={searchParams} />
     </Suspense>
   );
 }
 
-async function DashboardBody() {
+async function DashboardBody({ searchParams }: { searchParams: Promise<DashboardSearch> }) {
   await connection();
+  const payment = paymentState((await searchParams).payment);
   if (!accountsConfigured()) {
     const credits = await readCreditBalance();
     return (
@@ -40,17 +52,19 @@ async function DashboardBody() {
         primaryLabel="Tailor a resume"
         secondaryHref="/signup?next=/dashboard"
         secondaryLabel="Create an account"
+        payment={payment}
       />
     );
   }
 
+  const returnPath = payment ? `/dashboard?payment=${payment}` : "/dashboard";
   const account = await currentAccount();
-  if (!account) redirect("/login?next=/dashboard");
+  if (!account) redirect(`/login?next=${encodeURIComponent(returnPath)}`);
   const [credits, profile] = await Promise.all([
     readCreditBalance(),
     readOwnProfile(account.id, account.email),
   ]);
-  if (profile.status === "needs-onboarding") redirect(withOnboarding("/dashboard", true));
+  if (profile.status === "needs-onboarding") redirect(withOnboarding(returnPath, true));
 
   const email = profile.email ?? account.email;
 
@@ -64,6 +78,7 @@ async function DashboardBody() {
       note={credits.note}
       primaryHref="/tailor"
       primaryLabel="Tailor a resume"
+      payment={payment}
       logout
     />
   );
@@ -80,6 +95,7 @@ function DashboardFrame({
   primaryLabel,
   secondaryHref,
   secondaryLabel,
+  payment,
   logout: showLogout,
 }: {
   kicker: string;
@@ -92,6 +108,7 @@ function DashboardFrame({
   primaryLabel: string;
   secondaryHref?: string;
   secondaryLabel?: string;
+  payment?: "success" | "failed" | null;
   logout?: boolean;
 }) {
   return (
@@ -107,11 +124,21 @@ function DashboardFrame({
         <h2 className="text-xs font-bold tracking-[0.16em] text-brass uppercase">Tailorings left</h2>
         <p className="mt-3 font-display text-7xl leading-none tabular-nums">{remaining}</p>
         <p className="mt-4 max-w-md text-sm leading-6 text-[#d5e4dc]">{note}</p>
+        {payment === "success" ? (
+          <p role="status" className="mt-4 text-sm font-semibold text-[#f6f3ec]">
+            Payment received. Five tailorings are on your account.
+          </p>
+        ) : null}
+        {payment === "failed" ? (
+          <p role="alert" className="mt-4 text-sm font-semibold text-[#f6f3ec]">
+            The payment could not be completed.
+          </p>
+        ) : null}
         <Link
           href="/pricing"
           className="mt-5 inline-flex min-h-12 items-center justify-center rounded-full bg-[#f6f3ec] px-5 text-sm font-semibold text-deep"
         >
-          Get 5 tailorings for $9
+          {PACK_PRICE_BUTTON}
         </Link>
       </section>
 

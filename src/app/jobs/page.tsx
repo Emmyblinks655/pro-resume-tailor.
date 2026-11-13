@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { primaryButtonClass, textFieldClass } from "@/components/field-styles";
 import { JobResults } from "@/components/job-results";
 import { parseJobQuery } from "@/lib/jobs/filter";
+import { externalHttpUrl } from "@/lib/jobs/text";
 import { searchJobs } from "@/lib/jobs/search";
 import type { JobQuery, JobSearchResponse } from "@/lib/jobs/types";
 
@@ -105,15 +106,22 @@ function JobsBoard({ query, result }: { query: JobQuery; result: JobSearchRespon
       <section className="mt-8 border-t border-line pt-6">
         <h2 className="font-display text-2xl">Sources</h2>
         <ul className="mt-3 flex flex-col gap-3">
-          {result.sources.map((source) => (
+          {result.sources.map((source) => {
+            const sourceHref = externalHttpUrl(source.url);
+            return (
             <li key={source.id} className="text-sm leading-6 text-ink-soft">
-              <a href={source.url} target="_blank" rel="noopener" className="font-semibold text-ink underline-offset-4 hover:underline">
-                {source.label}
-              </a>
+              {sourceHref ? (
+                <a href={sourceHref} target="_blank" rel="noopener" className="font-semibold text-ink underline-offset-4 hover:underline">
+                  {source.label}
+                </a>
+              ) : (
+                <span className="font-semibold text-ink">{source.label}</span>
+              )}
               {". "}
               {source.note}
             </li>
-          ))}
+            );
+          })}
         </ul>
       </section>
     </div>
