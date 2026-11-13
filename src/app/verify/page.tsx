@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { AccountsNotice } from "@/components/accounts-notice";
 import { AuthCard } from "@/components/auth-card";
 import { VerifyForm } from "@/components/verify-form";
 import { redirectForAccount } from "@/lib/auth/destination";
 import { readOtpType } from "@/lib/auth/otp";
 import { safeNextPath } from "@/lib/auth/paths";
 import { readEmail } from "@/lib/auth/validation";
-import { accountsConfigured } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
   title: "Confirm your email",
@@ -54,16 +52,6 @@ async function VerifyPanel({ searchParams }: { searchParams: Promise<VerifySearc
   const noticeValue = first(params.notice);
   const notice = noticeValue === "limited" || noticeValue === "failed" ? noticeValue : null;
   const otpType = readOtpType(first(params.type));
-
-  if (!accountsConfigured()) {
-    return (
-      <AuthCard kicker="Account" title="Confirm your email">
-        <div className="mt-6">
-          <AccountsNotice detail="Add the Supabase URL and publishable anon key on the server, then restart." />
-        </div>
-      </AuthCard>
-    );
-  }
 
   await redirectForAccount(nextPath);
 

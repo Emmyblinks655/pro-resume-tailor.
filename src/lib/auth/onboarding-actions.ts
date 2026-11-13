@@ -31,7 +31,7 @@ export async function saveOnboarding(_previous: OnboardingState, formData: FormD
 
   if (error || !Array.isArray(data) || data.length === 0) {
     return {
-      error: "We couldn't save your name. Apply the latest profiles migration if this keeps happening.",
+      error: "We couldn't save your name. Please try again.",
       fieldErrors: {},
     };
   }

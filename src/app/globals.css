@@ -1,30 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f4efe6;
-  --ink: #1c1915;
-  --ink-soft: #534c43;
-  --copper: #b54a28;
-  --card: #fffdf8;
-  --line: #e3d8c8;
-  --highlight: #f6ddc4;
+  --paper: #f3f1ea;
+  --ink: #14211c;
+  --ink-soft: #3e4f46;
+  --accent: #0b6e4f;
+  --accent-deep: #08543c;
+  --copper: var(--accent);
+  --card: #fffcf8;
+  --line: #e3ddd2;
+  --highlight: #e7f3ec;
+  --deep: #12241c;
+  --brass: #f3d48a;
+  --danger: #8f2d2d;
 }
 
 @theme inline {
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
   --color-copper: var(--copper);
   --color-card: var(--card);
   --color-line: var(--line);
   --color-highlight: var(--highlight);
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --color-deep: var(--deep);
+  --color-brass: var(--brass);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background:
-    radial-gradient(1200px 420px at 50% -180px, rgb(181 74 40 / 0.09), transparent 62%),
+    radial-gradient(980px 480px at 100% -120px, rgb(11 110 79 / 0.12), transparent 58%),
+    radial-gradient(720px 420px at -12% 8%, rgb(243 212 138 / 0.22), transparent 52%),
     var(--paper);
   color: var(--ink);
 }
@@ -32,14 +47,21 @@ body {
 a,
 button,
 summary {
-  -webkit-tap-highlight-color: rgb(181 74 40 / 0.16);
+  -webkit-tap-highlight-color: rgb(11 110 79 / 0.16);
 }
 
 ::selection {
-  background: #f0c7a8;
+  background: #cfe6da;
+  color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--copper);
-  outline-offset: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

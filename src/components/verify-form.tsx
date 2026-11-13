@@ -127,7 +127,7 @@ export function VerifyForm({
           <p className="mt-1 text-base font-semibold break-all">{emailValue}</p>
           <button
             type="button"
-            className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-copper underline-offset-4 hover:underline"
+            className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-accent underline-offset-4 hover:underline"
             onClick={() => setEditingEmail(true)}
           >
             Use a different email

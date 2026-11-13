@@ -1,5 +1,5 @@
 export const TAGLINE =
-  "Pro Resume Tailor helps job seekers turn a generic CV into a role-specific resume in seconds. Upload your CV, paste the job description, and get a tailored version that highlights the right skills. Five tailorings for nine dollars.";
+  "Pro Resume Tailor turns the CV you already have into a role-specific resume for developers and freelancers. Paste the job, download an ATS-safe PDF. Five tailorings for $9, once.";
 
 export const FAQ = [
   {
@@ -15,7 +15,7 @@ export const FAQ = [
   {
     question: "Is there a free trial that turns into a subscription?",
     answer:
-      "No. There is no trial, no plan, and no automatic renewal. Checkout is not live in this preview, and the buttons say so.",
+      "No. There is no trial, no plan, and no automatic renewal. You buy five tailorings for nine dollars, once.",
   },
   {
     question: "What does the download look like?",
@@ -30,11 +30,11 @@ export const FAQ = [
   {
     question: "Do I need an account?",
     answer:
-      "When Supabase is configured, you sign up with an email and a password of at least 8 characters. A 6-digit code confirms the address. Until those keys are set, the login page says accounts are not configured yet and the tailor stays open. Passwords are hashed by Supabase. This app does not keep them.",
+      "Create an account with your email and a password of at least 8 characters. A 6-digit code confirms the address. Your password is stored as a hash. This app does not keep the password.",
   },
   {
     question: "Do you store my resume?",
     answer:
-      "Not in a database in this version. The text is used to produce the draft for that request. Preview credits live in a cookie on your browser. See the privacy page for the draft policy.",
+      "The text is used to produce the draft for that request and is not saved in a database. See the privacy page for how accounts and tailorings are handled.",
   },
 ] as const;

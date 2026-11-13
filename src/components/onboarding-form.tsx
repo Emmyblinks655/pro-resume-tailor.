@@ -46,7 +46,7 @@ export function OnboardingForm({
           className={textFieldClass}
         />
         {state.fieldErrors.fullName ? (
-          <p id="fullName-error" className="mt-1 text-sm text-copper">
+          <p id="fullName-error" className="mt-1 text-sm text-danger">
             {state.fieldErrors.fullName}
           </p>
         ) : null}
@@ -73,7 +73,7 @@ export function OnboardingForm({
           For example, Frontend developer or Freelance designer.
         </p>
         {state.fieldErrors.headline ? (
-          <p className="mt-1 text-sm text-copper">{state.fieldErrors.headline}</p>
+          <p className="mt-1 text-sm text-danger">{state.fieldErrors.headline}</p>
         ) : null}
       </div>
 

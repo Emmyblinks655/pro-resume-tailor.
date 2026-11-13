@@ -2,23 +2,22 @@ import type { Metadata } from "next";
 
 import { Legal } from "@/components/legal";
 
-export const metadata: Metadata = { title: "Refunds" };
+export const metadata: Metadata = {
+  title: "Refunds",
+  description: "Refunds for an unused pack of resume tailorings.",
+};
 
 export default function RefundPage() {
   return (
-    <Legal title="Refunds" kicker="Draft policy">
+    <Legal title="Refunds" kicker="Refunds">
       <p>
-        Payments are not live, so this refund policy is not in effect yet. Nothing in the app can charge
-        you today.
+        A pack can be refunded within 14 days if none of its tailorings were used. A used tailoring is the
+        drafting work, and that part of the pack is not refunded.
       </p>
+      <p>There is no subscription to cancel.</p>
       <p>
-        When one-time packs go on sale, the intended rule is: a pack can be refunded within 14 days if
-        none of its tailorings were used. A used credit is the drafting work, and that part of the pack
-        is not refunded. There is no subscription to cancel, because there is no subscription.
-      </p>
-      <p>
-        Local preview credits in this version are not a purchase. Clearing the site cookie resets them.
-        They cannot be refunded because no money moved.
+        Tailorings that were not paid for are not refundable, because no payment was made. To ask about a
+        paid pack, use the email on your receipt.
       </p>
     </Legal>
   );

@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   if (!spent.ok) {
     return Response.json(
       {
-        error: "No preview credits left in this browser. Checkout is not live yet, so a pack cannot be bought from here.",
+        error: "No tailorings left. Get 5 more for $9.",
         credits: spent.balance,
       },
       { status: 402 },
@@ -51,10 +51,9 @@ export async function POST(request: Request) {
     return Response.json({ ...result, credits: spent.balance });
   } catch (error) {
     const credits = await refundCredit();
-    const message =
-      error instanceof Error
-        ? error.message
-        : "The tailor could not finish. Your preview credit was returned.";
+    const raw = error instanceof Error ? error.message : "";
+    const leaked = /api[_ -]?key|gemini|claude|anthropic|google|mock|configured|supabase/i.test(raw);
+    const message = leaked || !raw ? "The tailor could not finish. Please try again." : raw;
     return Response.json({ error: message, credits }, { status: 502 });
   }
 }

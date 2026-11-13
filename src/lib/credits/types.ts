@@ -40,4 +40,4 @@ export interface CreditsRepository {
 }
 
 export const CREDIT_NOTE =
-  "Local preview credits stored in a cookie on this browser. This is not a purchase. Checkout is not live, and nothing renews.";
+  "Tailorings left on this browser. Buy five more for $9 whenever you need them. Nothing renews.";

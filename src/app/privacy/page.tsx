@@ -2,31 +2,33 @@ import type { Metadata } from "next";
 
 import { Legal } from "@/components/legal";
 
-export const metadata: Metadata = { title: "Privacy" };
+export const metadata: Metadata = {
+  title: "Privacy",
+  description: "How Pro Resume Tailor handles resume text, accounts, and payments.",
+};
 
 export default function PrivacyPage() {
   return (
-    <Legal title="Privacy" kicker="Draft policy">
+    <Legal title="Privacy" kicker="Privacy">
       <p>
-        This is a placeholder for the privacy notice. It describes how this preview works today. Replace
-        it before you take real payments or store accounts.
+        Resume text and job descriptions are sent to Pro Resume Tailor so it can return a draft for that
+        request. That text is not saved in a database.
       </p>
       <p>
-        Resume text and job descriptions are sent to this app so it can return a draft. This version does
-        not save them in a database. Preview credits are kept in an httpOnly cookie on your browser.
+        A language model may process the text you submit in order to write the draft. The draft is checked
+        against your original resume so employers, dates, metrics, and tools you did not supply are not
+        added.
       </p>
       <p>
-        If a Gemini API key is set on the free tier, Google terms may allow prompts and responses to be
-        used to improve their products. A paid Gemini tier is the path if prompts must be excluded.
-        Anthropic is unused unless AI_PROVIDER is anthropic and ANTHROPIC_API_KEY is set.
+        Tailorings remaining are kept for this browser. This app does not collect or store card numbers. A
+        purchase is a one-time pack.
       </p>
-      <p>Checkout is not live. This preview does not collect card numbers.</p>
       <p>
-        If accounts are turned on, email and password sign-in is handled by Supabase Auth. Supabase stores
-        the password hash. The session lives in an httpOnly cookie. A profiles row stores the account id,
-        email, and, after onboarding, your name and an optional role. You can read only your own row, and
-        you can update only your name and role.
+        If you create an account, you sign in with an email and a password. The password is stored only as
+        a hash by the authentication provider. Your profile stores your account id, email, name, and an
+        optional role. You can read only your own profile, and you can update your name and role.
       </p>
+      <p>You can log out at any time. Logging out ends the session stored in an httpOnly cookie.</p>
     </Legal>
   );
 }

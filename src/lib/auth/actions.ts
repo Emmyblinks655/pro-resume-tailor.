@@ -40,7 +40,7 @@ export async function login(_previous: AuthFormState, formData: FormData): Promi
   if (Object.keys(fieldErrors).length > 0) return failure("Check the fields below.", fieldErrors);
 
   const supabase = await createSupabaseServerClient();
-  if (!supabase) return failure("Accounts aren't configured yet.");
+  if (!supabase) return failure("We couldn't sign you in just now. Please try again.");
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
@@ -70,7 +70,7 @@ export async function signup(_previous: AuthFormState, formData: FormData): Prom
   if (Object.keys(fieldErrors).length > 0) return failure("Check the fields below.", fieldErrors);
 
   const supabase = await createSupabaseServerClient();
-  if (!supabase) return failure("Accounts aren't configured yet.");
+  if (!supabase) return failure("We couldn't create your account just now. Please try again.");
 
   const origin = await requestOrigin();
   const { data, error } = await supabase.auth.signUp({

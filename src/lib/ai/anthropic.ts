@@ -16,7 +16,7 @@ export async function tailorWithAnthropic(input: TailorInput): Promise<{
 }> {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
   if (!apiKey) {
-    throw new Error("ANTHROPIC_API_KEY is not set.");
+    throw new Error("The tailor could not finish.");
   }
   const client = new Anthropic({ apiKey });
   const message = await client.messages.create({
@@ -30,13 +30,13 @@ export async function tailorWithAnthropic(input: TailorInput): Promise<{
     .join("\n")
     .trim();
   if (!text) {
-    throw new Error("Claude returned an empty resume.");
+    throw new Error("The tailor returned an empty resume.");
   }
   let parsed: unknown;
   try {
     parsed = parseModelJson(text);
   } catch {
-    throw new Error("Claude did not return JSON.");
+    throw new Error("The tailor did not return a readable resume.");
   }
   return groundResume(parseTailoredResume(parsed), input.resumeText, input.jobDescription);
 }

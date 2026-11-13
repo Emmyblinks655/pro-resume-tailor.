@@ -13,7 +13,7 @@ export function getAiStatus(): AiStatus {
     }
     return {
       mode: "anthropic",
-      modeLabel: "Tailored with Claude",
+      modeLabel: "Tailored from your resume",
       model: anthropicModel(),
       requestedProvider,
     };
@@ -23,7 +23,7 @@ export function getAiStatus(): AiStatus {
   }
   return {
     mode: "gemini",
-    modeLabel: "Tailored with Gemini",
+    modeLabel: "Tailored from your resume",
     model: geminiModel(),
     requestedProvider,
   };
@@ -40,7 +40,6 @@ export async function tailorResume(input: TailorInput): Promise<TailorSuccess> {
     return { ...status, ...drafted };
   } catch (error) {
     console.error("Resume tailor failed.", error);
-    const provider = status.mode === "anthropic" ? "Claude" : "Gemini";
-    throw new Error(`${provider} did not return a usable resume. Nothing was invented in its place.`);
+    throw new Error("The tailor could not finish. Nothing you did not write was added. Please try again.");
   }
 }

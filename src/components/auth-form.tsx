@@ -57,7 +57,7 @@ export function AuthForm({
           className={textFieldClass}
         />
         {emailError ? (
-          <p id="email-error" className="mt-1 text-sm text-copper">
+          <p id="email-error" className="mt-1 text-sm text-danger">
             {emailError}
           </p>
         ) : null}
@@ -82,7 +82,7 @@ export function AuthForm({
           At least {PASSWORD_MIN} characters.
         </p>
         {passwordError ? (
-          <p id="password-error" className="mt-1 text-sm text-copper">
+          <p id="password-error" className="mt-1 text-sm text-danger">
             {passwordError}
           </p>
         ) : null}
@@ -105,7 +105,7 @@ export function AuthForm({
             className={textFieldClass}
           />
           {confirmError ? (
-            <p id="confirm-error" className="mt-1 text-sm text-copper">
+            <p id="confirm-error" className="mt-1 text-sm text-danger">
               {confirmError}
             </p>
           ) : null}

@@ -31,7 +31,7 @@ export async function tailorWithGemini(input: TailorInput): Promise<{
 }> {
   const apiKey = process.env.GEMINI_API_KEY?.trim();
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not set.");
+    throw new Error("The tailor could not finish.");
   }
   const ai = new GoogleGenAI({ apiKey });
   let text = "";
@@ -42,13 +42,13 @@ export async function tailorWithGemini(input: TailorInput): Promise<{
     text = await generate(ai, input, false);
   }
   if (!text.trim()) {
-    throw new Error("Gemini returned an empty resume.");
+    throw new Error("The tailor returned an empty resume.");
   }
   let parsed: unknown;
   try {
     parsed = parseModelJson(text);
   } catch {
-    throw new Error("Gemini did not return JSON.");
+    throw new Error("The tailor did not return a readable resume.");
   }
   const resume = parseTailoredResume(parsed);
   return groundResume(resume, input.resumeText, input.jobDescription);
