@@ -8,12 +8,14 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --import ./scripts/register-ts.mjs --test src/lib/jobs/normalise.test.mts src/lib/auth/auth.test.ts src/lib/payments/paystack.test.ts"
+    "test": "node --experimental-strip-types --import ./scripts/register-ts.mjs --test src/lib/jobs/normalise.test.mts src/lib/auth/auth.test.ts src/lib/payments/paystack.test.ts src/lib/payments/verify-data.test.ts src/lib/resume/parse.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.119.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.1.0",
     "mammoth": "^1.13.0",
     "next": "16.4.6",
     "openai": "^7.56.0",

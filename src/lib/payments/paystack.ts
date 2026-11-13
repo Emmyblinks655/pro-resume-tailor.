@@ -13,6 +13,7 @@ import {
   priceAmountMinor,
 } from "@/lib/payments/paystack-config";
 import type { CheckoutRequest, CheckoutResult, PaymentProvider } from "@/lib/payments/types";
+import { chargeFromVerifyBody } from "@/lib/payments/verify-data";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 type PaystackCall = {
@@ -48,6 +49,7 @@ async function paystackCall(path: string, secret: string, init?: RequestInit): P
 export type VerifiedCharge = {
   reference: string;
   amount: number;
+  chargedAmount: number;
   currency: string;
   metadataUserId: string | null;
 };
@@ -59,21 +61,15 @@ export async function verifyPaystackTransaction(reference: string, secret: strin
     throw new Error("Payment verification could not finish.");
   }
   if (result.status !== 200) return null;
-  const envelope = asRecord(result.body);
-  const data = asRecord(envelope?.data);
-  if (envelope?.status !== true || data?.status !== "success") return null;
-  const amount = data.amount;
-  const currency = data.currency;
-  const returned = data.reference;
-  if (typeof amount !== "number" || !Number.isInteger(amount)) return null;
-  if (typeof currency !== "string" || typeof returned !== "string") return null;
-  if (returned !== reference) return null;
-  const metadata = asRecord(data.metadata);
+  const charge = chargeFromVerifyBody(result.body, reference);
+  if (!charge) return null;
+  const metadata = asRecord(asRecord(asRecord(result.body)?.data)?.metadata);
   const metadataUserId = typeof metadata?.user_id === "string" ? metadata.user_id : null;
   return {
-    reference,
-    amount,
-    currency: currency.toUpperCase(),
+    reference: charge.reference,
+    amount: charge.amount,
+    chargedAmount: charge.chargedAmount,
+    currency: charge.currency,
     metadataUserId,
   };
 }
