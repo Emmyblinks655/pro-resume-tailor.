@@ -114,13 +114,67 @@ function parseExperience(lines: string[]): ExperienceRole[] {
   return roles.slice(0, 12);
 }
 
-function parseSkills(lines: string[]): string[] {
+const CLOSER_FOR: Record<string, string> = {
+  "(": ")",
+  "[": "]",
+  "{": "}",
+};
+
+function bracketsBalanced(line: string): boolean {
+  const expected: string[] = [];
+  for (const char of line) {
+    const closer = CLOSER_FOR[char];
+    if (closer) {
+      expected.push(closer);
+      continue;
+    }
+    if (char === ")" || char === "]" || char === "}") {
+      if (expected.pop() !== char) return false;
+    }
+  }
+  return expected.length === 0;
+}
+
+function isSpacedSlash(line: string, index: number): boolean {
+  if (line[index] !== "/") return false;
+  const before = line[index - 1];
+  const after = line[index + 1];
+  return before !== undefined && after !== undefined && /\s/.test(before) && /\s/.test(after);
+}
+
+function splitDelimited(line: string, respectBrackets: boolean): string[] {
+  const parts: string[] = [];
+  let current = "";
+  let depth = 0;
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index] ?? "";
+    const atRoot = depth === 0;
+    if (atRoot && (char === "," || char === ";" || char === "|" || isSpacedSlash(line, index))) {
+      parts.push(current);
+      current = "";
+      continue;
+    }
+    current += char;
+    if (!respectBrackets) continue;
+    if (CLOSER_FOR[char]) depth += 1;
+    else if ((char === ")" || char === "]" || char === "}") && depth > 0) depth -= 1;
+  }
+  parts.push(current);
+  return parts.map((part) => part.trim()).filter((part) => part.length > 0);
+}
+
+/** Split on , ; | and spaced slashes. Brackets stay intact unless they are unbalanced. */
+export function splitSkillLine(line: string): string[] {
+  return splitDelimited(line, bracketsBalanced(line));
+}
+
+export function parseSkills(lines: string[]): string[] {
   const seen = new Set<string>();
   const skills: string[] = [];
   for (const line of lines) {
-    for (const chunk of stripBullet(line).split(/[,;|/]/)) {
+    for (const chunk of splitSkillLine(stripBullet(line))) {
       const name = chunk.trim();
-      if (!name || name.length > 40) continue;
+      if (!name || name.length > 60) continue;
       const key = name.toLowerCase();
       if (seen.has(key)) continue;
       seen.add(key);

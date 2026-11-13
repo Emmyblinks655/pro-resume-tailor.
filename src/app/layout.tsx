@@ -1,5 +1,8 @@
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Manrope } from "next/font/google";
+import Script from "next/script";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -21,6 +24,8 @@ const fraunces = Fraunces({
 });
 
 const publicSite = siteUrl();
+const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -52,7 +57,23 @@ export const metadata: Metadata = {
     title: "Pro Resume Tailor",
     description: TAGLINE,
   },
+  ...(googleSiteVerification ? { verification: { google: googleSiteVerification } } : {}),
 };
+
+function GoogleAnalytics() {
+  if (!gaMeasurementId) return null;
+  return (
+    <>
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaMeasurementId)}`} strategy="afterInteractive" />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', ${JSON.stringify(gaMeasurementId)});`}
+      </Script>
+    </>
+  );
+}
 
 export const viewport: Viewport = {
   themeColor: "#12241c",
@@ -79,6 +100,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
+        <Analytics />
+        <SpeedInsights />
+        <GoogleAnalytics />
       </body>
     </html>
   );
