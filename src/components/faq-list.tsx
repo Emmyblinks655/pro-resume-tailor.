@@ -1,4 +1,19 @@
+import { Fragment } from "react";
+
+import { SupportLink } from "@/components/support-link";
 import { FAQ } from "@/lib/copy";
+import { SUPPORT_EMAIL } from "@/lib/support";
+
+function AnswerText({ answer }: { answer: string }) {
+  const parts = answer.split(SUPPORT_EMAIL);
+  if (parts.length === 1) return answer;
+  return parts.map((part, index) => (
+    <Fragment key={index}>
+      {index > 0 ? <SupportLink /> : null}
+      {part}
+    </Fragment>
+  ));
+}
 
 export function FaqList() {
   return (
@@ -13,7 +28,9 @@ export function FaqList() {
               </span>
             </span>
           </summary>
-          <p className="pb-5 text-sm leading-6 text-ink-soft">{item.answer}</p>
+          <p className="pb-5 text-sm leading-6 text-ink-soft">
+            <AnswerText answer={item.answer} />
+          </p>
         </details>
       ))}
     </div>

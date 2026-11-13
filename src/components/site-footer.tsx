@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandLink } from "@/components/logo";
+import { SupportLink } from "@/components/support-link";
 import { PACK_PRICE_LABEL } from "@/lib/packs";
 
 const product = [
@@ -53,7 +54,12 @@ export function SiteFooter() {
         </nav>
       </div>
       <div className="border-t border-white/10">
-        <p className="mx-auto max-w-6xl px-4 py-5 text-sm">© 2026 Pro Resume Tailor</p>
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2026 Pro Resume Tailor</p>
+          <p>
+            Support: <SupportLink tone="inverse" />
+          </p>
+        </div>
       </div>
     </footer>
   );

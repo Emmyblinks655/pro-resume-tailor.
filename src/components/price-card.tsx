@@ -1,4 +1,5 @@
 import { CheckoutButton } from "@/components/checkout-button";
+import { SupportLink } from "@/components/support-link";
 import { CREDIT_PACKS, PACK_PRICE_BUTTON, PACK_PRICE_LABEL } from "@/lib/packs";
 
 const points = [
@@ -42,6 +43,9 @@ export function PriceCard() {
           <CheckoutButton packId={pack.id} label={PACK_PRICE_BUTTON} />
         </div>
         <p className="mt-3 text-center text-sm leading-6 text-ink-soft">Pay once. Nothing renews.</p>
+        <p className="mt-1 text-center text-sm leading-6 text-ink-soft">
+          Trouble paying? Email <SupportLink /> and we&apos;ll fix it fast.
+        </p>
       </div>
     </article>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Legal } from "@/components/legal";
+import { SupportLink } from "@/components/support-link";
 
 export const metadata: Metadata = {
   title: "Terms",
@@ -22,6 +23,10 @@ export default function TermsPage() {
       <p>
         Do not upload a resume you are not allowed to process. The tailor rephrases, reorders, and
         emphasises only what you supplied.
+      </p>
+      <p>
+        Questions about these terms, or a payment that did not complete, can be sent to <SupportLink />.
+        Include your payment reference when you write about a charge.
       </p>
     </Legal>
   );
