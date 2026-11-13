@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 
+import { BrandLink } from "@/components/logo";
 import { logout } from "@/lib/auth/actions";
 
 const links = [
@@ -40,11 +41,11 @@ function AuthLinks({
   stacked: boolean;
 }) {
   const itemClass = stacked
-    ? "flex min-h-12 items-center rounded-2xl px-3 text-base font-semibold"
-    : "inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-highlight";
+    ? "flex min-h-14 items-center rounded-2xl px-3 text-lg font-semibold"
+    : "inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-ink-soft hover:bg-highlight hover:text-ink";
 
   if (pending) {
-    return <span className={stacked ? "h-12 rounded-2xl bg-highlight" : "h-11 w-24 rounded-full bg-highlight"} />;
+    return <span className={stacked ? "h-14 rounded-2xl bg-highlight" : "h-11 w-24 rounded-full bg-highlight"} />;
   }
 
   if (account) {
@@ -103,32 +104,37 @@ export function SiteHeaderBar({
   const close = () => setOpenPath(null);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-paper/95 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-3 px-4">
-        <Link href="/" className="inline-flex min-h-12 items-center font-display text-lg leading-none tracking-tight text-ink">
-          Pro Resume Tailor
-        </Link>
-        <nav className="hidden items-center gap-1 lg:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-ink-soft hover:bg-highlight hover:text-ink"
-            >
-              {link.label}
-            </Link>
-          ))}
+    <>
+    <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4">
+        <BrandLink />
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+          {links.map((link) => {
+            const active = link.href.startsWith("/#") ? false : pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={`inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-highlight hover:text-ink ${
+                  active ? "bg-highlight text-ink" : "text-ink-soft"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <AuthLinks account={account} pending={pending} stacked={false} />
           <Link
             href="/tailor"
-            className="ml-1 inline-flex min-h-11 items-center rounded-full bg-copper px-4 text-sm font-semibold text-white"
+            className="ml-1 inline-flex min-h-11 items-center rounded-full bg-accent px-4 text-sm font-semibold text-white shadow-[0_10px_24px_-14px_rgba(11,110,79,0.9)] hover:bg-accent-deep"
           >
             Tailor
           </Link>
         </nav>
         <button
           type="button"
-          className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-line bg-card text-ink lg:hidden"
+          className="inline-flex size-12 items-center justify-center rounded-full border border-line bg-card text-ink shadow-sm lg:hidden"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpenPath(open ? null : pathname)}
@@ -137,15 +143,16 @@ export function SiteHeaderBar({
           <MenuGlyph open={open} />
         </button>
       </div>
+    </header>
       {open ? (
-        <div id={panelId} className="fixed inset-x-0 top-16 bottom-0 z-30 overflow-y-auto bg-paper lg:hidden">
-          <nav className="mx-auto flex max-w-5xl flex-col gap-1 px-4 py-4">
+        <div id={panelId} className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-paper lg:hidden">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]" aria-label="Mobile">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={close}
-                className="flex min-h-12 items-center rounded-2xl px-3 text-base font-semibold"
+                className="flex min-h-14 items-center rounded-2xl px-3 text-lg font-semibold"
               >
                 {link.label}
               </Link>
@@ -154,13 +161,13 @@ export function SiteHeaderBar({
             <Link
               href="/tailor"
               onClick={close}
-              className="mt-3 inline-flex min-h-12 items-center justify-center rounded-full bg-copper px-5 text-base font-semibold text-white"
+              className="mt-3 inline-flex min-h-14 items-center justify-center rounded-full bg-accent px-5 text-base font-semibold text-white"
             >
               Tailor a resume
             </Link>
           </nav>
         </div>
       ) : null}
-    </header>
+    </>
   );
 }

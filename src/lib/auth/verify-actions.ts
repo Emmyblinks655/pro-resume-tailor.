@@ -34,7 +34,7 @@ export async function verifyEmailCode(_previous: VerifyFormState, formData: Form
   if (token.length !== 6) return { error: "Enter all 6 digits." };
 
   const supabase = await createSupabaseServerClient();
-  if (!supabase) return { error: "Accounts aren't configured yet." };
+  if (!supabase) return { error: "We couldn't check that code. Please try again." };
 
   const types: OtpType[] = preferred === "email" ? ["email", "signup"] : ["signup", "email"];
   let lastMessage = "The code could not be checked. Try again.";
@@ -59,7 +59,7 @@ export async function resendSignupCode(_previous: ResendFormState, formData: For
   if (!email) return { error: "Enter the email you used to sign up.", message: null };
 
   const supabase = await createSupabaseServerClient();
-  if (!supabase) return { error: "Accounts aren't configured yet.", message: null };
+  if (!supabase) return { error: "We couldn't send a new code. Please try again.", message: null };
 
   const origin = await requestOrigin();
   const { error } = await supabase.auth.resend({

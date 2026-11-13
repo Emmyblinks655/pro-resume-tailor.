@@ -34,15 +34,20 @@ async function JobsContent({
 function JobsBoard({ query, result }: { query: JobQuery; result: JobSearchResponse }) {
   const failed = result.sources.filter((source) => !source.ok);
   return (
-    <div className="mx-auto flex max-w-5xl flex-col px-4 py-8 sm:py-12">
-      <p className="text-xs font-semibold tracking-[0.16em] text-copper uppercase">Live listings</p>
-      <h1 className="mt-3 font-display text-4xl leading-tight tracking-tight">Find a job to tailor for</h1>
+    <div className="mx-auto flex max-w-6xl flex-col px-4 py-10 sm:py-14">
+      <p className="text-xs font-bold tracking-[0.16em] text-accent uppercase">Live listings</p>
+      <h1 className="mt-3 max-w-2xl font-display text-4xl leading-tight tracking-tight sm:text-5xl">
+        Find a job to tailor for
+      </h1>
       <p className="mt-3 max-w-2xl text-base leading-7 text-ink-soft">
         Listings come from Remotive, Arbeitnow, Himalayas, and Remote OK. Open the original posting
         on that board. We do not host the full listing.
       </p>
 
-      <form action="/jobs" className="mt-6 grid gap-3 sm:grid-cols-2">
+      <form
+        action="/jobs"
+        className="mt-8 grid gap-4 rounded-[28px] border border-line bg-card p-4 shadow-[0_22px_50px_-32px_rgba(18,36,28,0.45)] sm:grid-cols-2 sm:p-6"
+      >
         <label className="text-sm font-semibold" htmlFor="q">
           Keyword
           <input

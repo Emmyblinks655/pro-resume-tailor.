@@ -61,7 +61,7 @@ export function JobResults({ jobs }: { jobs: Job[] }) {
       <p className="text-sm leading-6 text-ink-soft">
         {scored
           ? "Fit is keyword overlap between your resume and the listing. It is not an AI score."
-          : "Add a few lines of your resume to see a keyword overlap score. An AI ranker can replace this later."}
+          : "Add a few lines of your resume to see which listings share your keywords."}
       </p>
 
       {ranked.length === 0 ? (
@@ -71,7 +71,7 @@ export function JobResults({ jobs }: { jobs: Job[] }) {
       ) : (
         <ul className="flex flex-col gap-3">
           {ranked.map((job) => (
-            <li key={job.id} className="rounded-[28px] border border-line bg-card p-5 shadow-[0_16px_40px_rgba(28,25,21,0.04)]">
+            <li key={job.id} className="rounded-[28px] border border-line bg-card p-5 shadow-[0_22px_50px_-32px_rgba(18,36,28,0.45)]">
               <div className="flex flex-wrap items-center gap-2">
                 <a
                   href={JOB_SOURCES[job.source].url}
@@ -111,7 +111,7 @@ export function JobResults({ jobs }: { jobs: Job[] }) {
                 <button
                   type="button"
                   onClick={() => tailor(job)}
-                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-copper px-4 text-sm font-semibold text-white"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-accent px-4 text-sm font-semibold text-white hover:bg-accent-deep"
                 >
                   Tailor my resume for this job
                 </button>

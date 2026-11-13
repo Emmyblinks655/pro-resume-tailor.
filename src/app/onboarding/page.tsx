@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
-import { AccountsNotice } from "@/components/accounts-notice";
 import { AuthCard } from "@/components/auth-card";
 import { OnboardingForm } from "@/components/onboarding-form";
 import { safeNextPath } from "@/lib/auth/paths";
 import { withOnboarding } from "@/lib/auth/profile";
 import { readOwnProfile } from "@/lib/auth/profile-server";
 import { currentAccount } from "@/lib/auth/session";
-import { accountsConfigured } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
   title: "Your name",
@@ -31,16 +29,6 @@ async function OnboardingPanel({
 }) {
   const params = await searchParams;
   const nextPath = safeNextPath(typeof params.next === "string" ? params.next : null);
-
-  if (!accountsConfigured()) {
-    return (
-      <AuthCard kicker="Account" title="What should we call you?">
-        <div className="mt-6">
-          <AccountsNotice detail="Add the Supabase URL and publishable anon key on the server, then restart." />
-        </div>
-      </AuthCard>
-    );
-  }
 
   const account = await currentAccount();
   if (!account) redirect(`/login?next=${encodeURIComponent(withOnboarding(nextPath, true))}`);

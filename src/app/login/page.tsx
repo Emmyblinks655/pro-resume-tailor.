@@ -2,14 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { AccountsNotice } from "@/components/accounts-notice";
 import { AuthCard } from "@/components/auth-card";
 import { AuthForm } from "@/components/auth-form";
 import { login } from "@/lib/auth/actions";
 import { redirectForAccount } from "@/lib/auth/destination";
 import { verifyPath } from "@/lib/auth/otp";
 import { safeNextPath } from "@/lib/auth/paths";
-import { accountsConfigured } from "@/lib/supabase/env";
 
 export const metadata: Metadata = {
   title: "Log in",
@@ -35,16 +33,6 @@ async function LoginPanel({
     params.error === "confirm"
       ? "That confirmation link did not finish. Enter the 6-digit code instead, or log in if you already confirmed."
       : null;
-
-  if (!accountsConfigured()) {
-    return (
-      <AuthCard kicker="Account" title="Log in">
-        <div className="mt-6">
-          <AccountsNotice detail="Add the Supabase URL and publishable anon key on the server, then restart." />
-        </div>
-      </AuthCard>
-    );
-  }
 
   await redirectForAccount(nextPath);
 

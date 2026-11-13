@@ -72,7 +72,7 @@ export function OtpInput({
               focusAt(index + 1);
             }
           }}
-          className="h-14 w-full min-w-0 rounded-2xl border border-line bg-paper text-center text-2xl font-semibold text-ink tabular-nums outline-none"
+          className="h-14 w-full min-w-0 rounded-2xl border border-line bg-paper text-center font-display text-2xl font-semibold text-ink tabular-nums shadow-sm outline-none"
         />
       ))}
     </div>

@@ -15,9 +15,7 @@ export const polarProvider: PaymentProvider = {
       provider: "polar",
       status: "coming_soon",
       packId: input.packId,
-      message: pack
-        ? `Polar checkout is not connected yet. ${pack.name} would be a one-time charge of ${pack.priceLabel}. There is no trial and nothing will renew.`
-        : "Unknown pack.",
+      message: pack ? `${pack.name} is ${pack.priceLabel}, paid once.` : "Choose a pack.",
     };
   },
 };

@@ -21,7 +21,7 @@ function publicBalance(remaining: number): CreditBalance {
   return {
     remaining,
     source: "local-cookie",
-    label: "Local preview credits",
+    label: "Tailorings left",
     note: CREDIT_NOTE,
   };
 }

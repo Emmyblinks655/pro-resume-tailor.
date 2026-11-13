@@ -42,13 +42,13 @@ ANTHROPIC_API_KEY=your-key
 ANTHROPIC_MODEL=claude-sonnet-5-5
 ```
 
-If the selected provider has no key, or `AI_PROVIDER=mock`, requests stay in mock mode and the tailor page says so.
+If the selected provider has no key, or `AI_PROVIDER=mock`, requests stay in mock mode. The tailor page does not mention that fallback.
 
 ## What you can do
 
 1. Landing page: tagline, three steps, the no-subscription message, and FAQ.
 2. `/tailor`: paste a resume or upload PDF/DOCX, paste a job, tailor, compare before and after, download Letter or A4 PDF.
-3. `/pricing`: the $9 pack of 5 tailorings. The button says Coming soon and calls the stub checkout adapter.
+3. `/pricing`: the $9 pack of 5 tailorings. The button reads “Get 5 tailorings for $9” and calls the checkout adapter. Until a provider returns a checkout URL, the button continues to signup.
 4. `/signup` and `/login`: email and password. `/dashboard`: the account email, a preview credit balance, and log out.
 5. `/privacy`, `/terms`, and `/refund`: draft pages.
 6. `/jobs`: live listings from Remotive, Arbeitnow, Himalayas, and Remote OK. Cards link to the original posting. “Tailor my resume for this job” opens `/tailor` with that description filled in. `/jobs` stays public.
@@ -67,7 +67,7 @@ Email and password accounts use Supabase Auth through `@supabase/ssr`. Supabase 
 
 `/tailor` and `/dashboard` require a logged-in user once the Supabase variables are set. Anyone else is redirected to `/login?next=...` and sent back after login. The landing page, pricing, the legal pages, and `/jobs` stay public. `/api/jobs` stays public too. `/api/tailor` also refuses the request when accounts are on and there is no session.
 
-If `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_ANON_KEY` is missing, the build still passes. Signup, login, the tailor, and the dashboard show **Accounts aren't configured yet**. The tailor keeps working. Nothing is hard-locked.
+If `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_ANON_KEY` is missing, the build still passes. Signup, login, and verify still render their forms. Submitting them returns a generic retry message. The tailor keeps working. The dashboard shows tailorings left and a signup link. Nothing is hard-locked, and the UI does not mention missing keys.
 
 Passwords must be at least 8 characters. The app also rejects passwords longer than 72 characters, which is the bcrypt limit.
 

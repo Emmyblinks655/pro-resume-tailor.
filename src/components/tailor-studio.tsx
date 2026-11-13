@@ -1,27 +1,29 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { ResumePreview } from "@/components/resume-preview";
-import type { AiStatus, TailorSuccess } from "@/lib/ai/types";
+import type { TailorSuccess } from "@/lib/ai/types";
 import type { CreditBalance } from "@/lib/credits/types";
 import { JOB_DRAFT_KEY, RESUME_DRAFT_KEY } from "@/lib/jobs/draft";
 import { SAMPLE_JOB, SAMPLE_RESUME } from "@/lib/sample-data";
 import type { PageSize } from "@/lib/resume/types";
 
 const fieldClass =
-  "mt-2 min-h-36 w-full rounded-2xl border border-line bg-card px-4 py-3 text-base leading-6 text-ink";
+  "mt-2 min-h-36 w-full rounded-2xl border border-line bg-paper px-4 py-3 text-base leading-6 text-ink shadow-sm";
+
+const panelClass =
+  "rounded-[28px] border border-line bg-card p-4 shadow-[0_22px_50px_-32px_rgba(18,36,28,0.4)] sm:p-6";
 
 type StatusPayload = {
   credits: CreditBalance;
-  ai: AiStatus;
 };
 
 export function TailorStudio() {
   const [resumeText, setResumeText] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [credits, setCredits] = useState<CreditBalance | null>(null);
-  const [ai, setAi] = useState<AiStatus | null>(null);
   const [result, setResult] = useState<TailorSuccess | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<"extract" | "tailor" | "pdf" | null>(null);
@@ -34,13 +36,10 @@ export function TailorStudio() {
     fetch("/api/credits")
       .then((response) => response.json())
       .then((data: StatusPayload) => {
-        if (!cancelled) {
-          setCredits(data.credits);
-          setAi(data.ai);
-        }
+        if (!cancelled) setCredits(data.credits);
       })
       .catch(() => {
-        if (!cancelled) setError("Could not load preview credits.");
+        if (!cancelled) setError("Could not load your tailorings.");
       });
     return () => {
       cancelled = true;
@@ -156,35 +155,33 @@ export function TailorStudio() {
   }
 
   const blocked = credits !== null && credits.remaining < 1;
-  const mock = (result?.mode ?? ai?.mode) === "mock";
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8">
+    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:py-14">
       <div>
-        <h1 className="font-display text-4xl leading-tight text-ink">Tailor your resume</h1>
-        <p className="mt-2 max-w-2xl text-base leading-7 text-ink-soft">
+        <p className="text-xs font-bold tracking-[0.16em] text-accent uppercase">Tailor</p>
+        <h1 className="mt-3 font-display text-4xl leading-tight tracking-tight text-ink sm:text-5xl">
+          Tailor your resume
+        </h1>
+        <p className="mt-3 max-w-2xl text-base leading-7 text-ink-soft">
           Paste a resume or upload a PDF or DOCX, paste the job, then tailor it once. The draft only
           rearranges what you supplied.
         </p>
       </div>
 
-      {mock ? (
-        <p className="rounded-2xl border border-copper/40 bg-highlight px-4 py-3 text-sm leading-6">
-          <strong>Mock mode — no API key.</strong> This preview reorders and emphasises your own text. It
-          does not call Gemini. Add GEMINI_API_KEY on the server when you want live tailoring.
-        </p>
-      ) : null}
-
       {credits ? (
         <p className="text-sm leading-6 text-ink-soft">
-          <span className="font-semibold text-ink">{credits.remaining}</span> local preview credits in this
-          browser. Not a purchase. Checkout is not live.
+          <span className="font-semibold text-ink">{credits.remaining}</span>{" "}
+          {credits.remaining === 1 ? "tailoring" : "tailorings"} left.{" "}
+          <Link href="/pricing" className="font-semibold text-accent underline-offset-4 hover:underline">
+            Get 5 tailorings for $9
+          </Link>
         </p>
       ) : (
-        <p className="text-sm text-ink-soft">Loading preview credits...</p>
+        <p className="text-sm text-ink-soft">Loading your tailorings…</p>
       )}
 
-      <section className="rounded-3xl border border-line bg-paper p-4 sm:p-5">
+      <section className={panelClass}>
         <div className="flex flex-wrap items-end justify-between gap-3">
           <h2 className="font-display text-2xl">1. Your resume</h2>
           <button
@@ -228,7 +225,7 @@ export function TailorStudio() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-line bg-paper p-4 sm:p-5">
+      <section className={panelClass}>
         <h2 className="font-display text-2xl">2. The job</h2>
         <label className="mt-4 block text-sm font-semibold" htmlFor="job">
           Paste the job description
@@ -243,7 +240,7 @@ export function TailorStudio() {
       </section>
 
       {error ? (
-        <p role="alert" className="rounded-2xl border border-copper bg-highlight px-4 py-3 text-sm leading-6">
+        <p role="alert" className="rounded-2xl border border-danger/25 bg-[#f8ece8] px-4 py-3 text-sm leading-6">
           {error}
         </p>
       ) : null}
@@ -252,13 +249,16 @@ export function TailorStudio() {
         type="button"
         onClick={() => void tailor()}
         disabled={pending !== null || blocked}
-        className="inline-flex min-h-12 items-center justify-center rounded-full bg-copper px-6 text-base font-semibold text-white disabled:opacity-60"
+        className="inline-flex min-h-12 items-center justify-center rounded-full bg-accent px-6 text-base font-semibold text-white shadow-[0_14px_30px_-16px_rgba(11,110,79,0.95)] hover:bg-accent-deep disabled:opacity-60"
       >
         {pending === "tailor" ? "Tailoring..." : "Tailor resume"}
       </button>
       {blocked ? (
-        <p className="text-sm text-ink-soft">
-          Preview credits in this browser are used up. Buying a pack is not available yet.
+        <p className="text-sm leading-6 text-ink-soft">
+          You have no tailorings left.{" "}
+          <Link href="/pricing" className="font-semibold text-accent underline-offset-4 hover:underline">
+            Get 5 tailorings for $9
+          </Link>
         </p>
       ) : null}
 
@@ -267,14 +267,14 @@ export function TailorStudio() {
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="font-display text-2xl">3. Preview</h2>
-              <p className="mt-1 text-sm text-ink-soft">{result.modeLabel}</p>
+              <p className="mt-1 text-sm text-ink-soft">Ready to download as a single-column PDF.</p>
             </div>
             <div className="flex rounded-full border border-line bg-card p-1 sm:hidden" role="tablist" aria-label="Preview">
               <button
                 type="button"
                 role="tab"
                 aria-selected={view === "after"}
-                className={`min-h-10 rounded-full px-4 text-sm font-semibold ${view === "after" ? "bg-ink text-paper" : ""}`}
+                className={`min-h-11 rounded-full px-4 text-sm font-semibold ${view === "after" ? "bg-ink text-paper" : ""}`}
                 onClick={() => setView("after")}
               >
                 Tailored
@@ -283,7 +283,7 @@ export function TailorStudio() {
                 type="button"
                 role="tab"
                 aria-selected={view === "before"}
-                className={`min-h-10 rounded-full px-4 text-sm font-semibold ${view === "before" ? "bg-ink text-paper" : ""}`}
+                className={`min-h-11 rounded-full px-4 text-sm font-semibold ${view === "before" ? "bg-ink text-paper" : ""}`}
                 onClick={() => setView("before")}
               >
                 Original
@@ -329,7 +329,7 @@ export function TailorStudio() {
               type="button"
               onClick={() => void downloadPdf()}
               disabled={pending !== null}
-              className="inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-6 text-base font-semibold text-paper disabled:opacity-60 sm:mt-6"
+              className="inline-flex min-h-12 items-center justify-center rounded-full bg-deep px-6 text-base font-semibold text-[#f6f3ec] disabled:opacity-60 sm:mt-6"
             >
               {pending === "pdf" ? "Preparing PDF..." : "Download PDF"}
             </button>

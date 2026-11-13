@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
-import { AccountsNotice } from "@/components/accounts-notice";
 import { TailorStudio } from "@/components/tailor-studio";
 import { withOnboarding } from "@/lib/auth/profile";
 import { readOwnProfile } from "@/lib/auth/profile-server";
@@ -25,19 +24,11 @@ export default function TailorPage() {
 
 async function TailorGate() {
   await connection();
-  if (!accountsConfigured()) {
-    return (
-      <>
-        <div className="mx-auto max-w-5xl px-4 pt-6">
-          <AccountsNotice detail="You can still tailor a resume. Sign-in turns on after the Supabase keys are set." />
-        </div>
-        <TailorStudio />
-      </>
-    );
+  if (accountsConfigured()) {
+    const account = await currentAccount();
+    if (!account) redirect("/login?next=/tailor");
+    const profile = await readOwnProfile(account.id, account.email);
+    if (profile.status === "needs-onboarding") redirect(withOnboarding("/tailor", true));
   }
-  const account = await currentAccount();
-  if (!account) redirect("/login?next=/tailor");
-  const profile = await readOwnProfile(account.id, account.email);
-  if (profile.status === "needs-onboarding") redirect(withOnboarding("/tailor", true));
   return <TailorStudio />;
 }

@@ -21,7 +21,8 @@ export type TailorSuccess = AiStatus & {
   warnings: string[];
 };
 
-export const MOCK_LABEL = "Mock mode — no API key";
+/** Customer-facing label. The mode field stays "mock" for the server fallback. */
+export const MOCK_LABEL = "Tailored from your resume";
 
 export function tailorLocally(input: TailorInput): TailoredResume {
   return emphasize(parseResume(input.resumeText), input.jobDescription);
