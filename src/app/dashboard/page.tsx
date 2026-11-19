@@ -5,6 +5,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { cardClass, primaryButtonClass, quietButtonClass } from "@/components/field-styles";
+import { SupportLink } from "@/components/support-link";
 import { logout } from "@/lib/auth/actions";
 import { withOnboarding } from "@/lib/auth/profile";
 import { readOwnProfile } from "@/lib/auth/profile-server";
@@ -130,8 +131,9 @@ function DashboardFrame({
           </p>
         ) : null}
         {payment === "failed" ? (
-          <p role="alert" className="mt-4 text-sm font-semibold text-[#f6f3ec]">
-            The payment could not be completed.
+          <p role="alert" className="mt-4 text-sm leading-6 text-[#f6f3ec]">
+            <span className="font-semibold">The payment could not be completed.</span> Email <SupportLink tone="inverse" />{" "}
+            and include your payment reference.
           </p>
         ) : null}
         <Link

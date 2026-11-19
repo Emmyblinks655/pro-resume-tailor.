@@ -1,4 +1,5 @@
 import { PACK_PRICE_LABEL } from "@/lib/packs";
+import { SUPPORT_EMAIL } from "@/lib/support";
 
 export const TAGLINE =
   `Pro Resume Tailor turns the CV you already have into a role-specific resume for developers and freelancers. Paste the job, download an ATS-safe PDF. Five tailorings for ${PACK_PRICE_LABEL}, once.`;
@@ -18,6 +19,10 @@ export const FAQ = [
     question: "Is there a free trial that turns into a subscription?",
     answer:
       `No. There is no trial, no plan, and no automatic renewal. You buy five tailorings for ${PACK_PRICE_LABEL}, once.`,
+  },
+  {
+    question: "What if a payment does not go through?",
+    answer: `Email ${SUPPORT_EMAIL} and include your payment reference. We will fix it fast.`,
   },
   {
     question: "What does the download look like?",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Legal } from "@/components/legal";
+import { SupportLink } from "@/components/support-link";
 
 export const metadata: Metadata = {
   title: "Refunds",
@@ -17,7 +18,7 @@ export default function RefundPage() {
       <p>There is no subscription to cancel.</p>
       <p>
         Tailorings that were not paid for are not refundable, because no payment was made. To ask about a
-        paid pack, use the email on your receipt.
+        paid pack, email <SupportLink /> and include the payment reference from your receipt.
       </p>
     </Legal>
   );

@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --import ./scripts/register-ts.mjs --test src/lib/jobs/normalise.test.mts src/lib/auth/auth.test.ts src/lib/payments/paystack.test.ts src/lib/payments/verify-data.test.ts src/lib/resume/parse.test.ts"
+    "test": "node --experimental-strip-types --import ./scripts/register-ts.mjs --test src/lib/jobs/normalise.test.mts src/lib/auth/auth.test.ts src/lib/payments/paystack.test.ts src/lib/payments/verify-data.test.ts src/lib/resume/parse.test.ts src/lib/support.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",
